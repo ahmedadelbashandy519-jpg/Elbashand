@@ -1,0 +1,6883 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>نظام مبيعات البشندي</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+
+:root{
+    --blue:#1409c7;
+    --blue-light:#2920e8;
+    --blue-dark:#0b0875;
+
+    --bg:#f4f6fb;
+    --white:#fff;
+    --text:#172033;
+    --muted:#6b7280;
+
+    --green:#16a34a;
+    --red:#dc2626;
+    --orange:#f59e0b;
+
+    --border:#e5e7eb;
+
+    --shadow:0 8px 30px rgba(20,9,199,.08);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:"Cairo",Tahoma,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+button,
+input,
+select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    min-height:100vh;
+}
+
+/* =========================
+SIDEBAR
+========================= */
+
+.sidebar{
+    position:fixed;
+    right:0;
+    top:0;
+    bottom:0;
+
+    width:250px;
+
+    background:linear-gradient(
+        180deg,
+        var(--blue),
+        var(--blue-dark)
+    );
+
+    color:white;
+
+    padding:18px 14px;
+
+    z-index:1000;
+
+    overflow-y:auto;
+}
+
+.logo{
+    text-align:center;
+
+    padding:15px 5px 22px;
+
+    border-bottom:
+    1px solid rgba(255,255,255,.2);
+
+    margin-bottom:15px;
+}
+
+.logo h1{
+    font-size:30px;
+    font-weight:800;
+}
+
+.logo p{
+    font-size:14px;
+    opacity:.85;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.menu button{
+    width:100%;
+
+    background:transparent;
+
+    border:0;
+
+    color:white;
+
+    padding:13px 14px;
+
+    border-radius:11px;
+
+    text-align:right;
+
+    font-size:16px;
+
+    transition:.2s;
+}
+
+.menu button:hover,
+.menu button.active{
+    background:rgba(255,255,255,.15);
+}
+
+/* =========================
+MAIN
+========================= */
+
+.main{
+    margin-right:250px;
+
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+
+    background:white;
+
+    border-bottom:
+    1px solid var(--border);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 25px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:500;
+}
+
+.topbar h2{
+    color:var(--blue);
+
+    font-size:22px;
+}
+
+.date{
+    color:var(--muted);
+
+    font-size:14px;
+}
+
+.content{
+    padding:25px;
+}
+
+/* =========================
+PAGES
+========================= */
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* =========================
+STATS
+========================= */
+
+.stats{
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:18px;
+
+    margin-bottom:22px;
+}
+
+.stat{
+    background:white;
+
+    border:
+    1px solid var(--border);
+
+    border-radius:17px;
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
+}
+
+.stat-icon{
+    width:44px;
+    height:44px;
+
+    background:#eef0ff;
+
+    color:var(--blue);
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:20px;
+
+    margin-bottom:10px;
+}
+
+.stat-title{
+    color:var(--muted);
+
+    font-size:14px;
+}
+
+.stat-value{
+    font-size:25px;
+
+    font-weight:800;
+
+    margin-top:4px;
+}
+
+/* =========================
+SECTION
+========================= */
+
+.section{
+    background:white;
+
+    border:
+    1px solid var(--border);
+
+    border-radius:17px;
+
+    padding:22px;
+
+    margin-bottom:20px;
+
+    box-shadow:var(--shadow);
+}
+
+.section-title{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:18px;
+}
+
+.section-title h2{
+    color:var(--blue);
+
+    font-size:20px;
+}
+
+/* =========================
+BUTTONS
+========================= */
+
+.btn{
+    border:0;
+
+    padding:10px 16px;
+
+    border-radius:9px;
+
+    font-size:15px;
+}
+
+.btn-primary{
+    background:var(--blue);
+
+    color:white;
+}
+
+.btn-primary:hover{
+    background:var(--blue-dark);
+}
+
+.btn-green{
+    background:var(--green);
+
+    color:white;
+}
+
+.btn-red{
+    background:var(--red);
+
+    color:white;
+}
+
+.btn-gray{
+    background:#eef0f5;
+
+    color:#333;
+}
+
+.btn-orange{
+    background:var(--orange);
+
+    color:white;
+}
+
+/* =========================
+FORM
+========================= */
+
+.form-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:7px;
+}
+
+.form-group label{
+    font-size:14px;
+
+    color:#444;
+}
+
+.form-group input,
+.form-group select,
+.search-box input{
+    width:100%;
+
+    padding:11px 13px;
+
+    border:
+    1px solid #d8dce7;
+
+    border-radius:9px;
+
+    outline:none;
+
+    font-size:15px;
+
+    background:white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.search-box input:focus{
+    border-color:var(--blue);
+
+    box-shadow:
+    0 0 0 3px
+    rgba(20,9,199,.08);
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+/* =========================
+SALES
+========================= */
+
+.sales-layout{
+    display:grid;
+
+    grid-template-columns:
+    1.5fr 1fr;
+
+    gap:20px;
+}
+
+/* =========================
+PRODUCT SEARCH
+========================= */
+
+.product-search-area{
+    background:#f7f8ff;
+
+    border:
+    1px solid #dfe2ff;
+
+    border-radius:15px;
+
+    padding:16px;
+
+    margin-bottom:18px;
+}
+
+.search-title{
+    color:var(--blue);
+
+    font-weight:700;
+
+    margin-bottom:8px;
+}
+
+.search-box{
+    position:relative;
+}
+
+.search-box input{
+    font-size:17px;
+
+    padding:14px;
+}
+
+/* =========================
+SEARCH RESULTS
+========================= */
+
+.search-results{
+    margin-top:8px;
+
+    background:white;
+
+    border-radius:10px;
+
+    border:
+    1px solid var(--border);
+
+    max-height:260px;
+
+    overflow-y:auto;
+
+    display:none;
+}
+
+.search-results.show{
+    display:block;
+}
+
+.search-result{
+    padding:12px 14px;
+
+    border-bottom:
+    1px solid var(--border);
+
+    cursor:pointer;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+.search-result:hover{
+    background:#f5f6ff;
+}
+
+.search-result:last-child{
+    border-bottom:0;
+}
+
+.result-name{
+    font-weight:700;
+}
+
+.result-info{
+    color:var(--muted);
+
+    font-size:13px;
+}
+
+.result-price{
+    color:var(--blue);
+
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+/* =========================
+BARCODE
+========================= */
+
+.barcode-box{
+    border:
+    2px solid var(--blue);
+
+    background:#f8f8ff;
+
+    border-radius:15px;
+
+    padding:16px;
+
+    margin-bottom:18px;
+}
+
+.barcode-box label{
+    display:block;
+
+    color:var(--blue);
+
+    font-weight:700;
+
+    margin-bottom:8px;
+}
+
+.barcode-input{
+    width:100%;
+
+    border:0;
+
+    outline:0;
+
+    background:white;
+
+    border-radius:10px;
+
+    padding:14px;
+
+    text-align:center;
+
+    font-size:22px;
+}
+
+/* =========================
+CART TABLE
+========================= */
+
+.table-wrap{
+    overflow:auto;
+}
+
+.cart-table{
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:650px;
+}
+
+.cart-table th,
+.cart-table td{
+    padding:12px 8px;
+
+    border-bottom:
+    1px solid var(--border);
+
+    text-align:center;
+}
+
+.cart-table th{
+    background:#f6f7fb;
+
+    color:#444;
+}
+
+.qty-controls{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+}
+
+.qty-controls button{
+    width:30px;
+    height:30px;
+
+    border:0;
+
+    border-radius:7px;
+
+    background:#eef0ff;
+
+    color:var(--blue);
+
+    font-size:18px;
+}
+
+.qty-input{
+    width:80px;
+    height:38px;
+    border:1px solid #d8dce7;
+    border-radius:8px;
+    text-align:center;
+    font-size:17px;
+    font-weight:700;
+    outline:none;
+    background:white;
+}
+
+.qty-input:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(20,9,199,.08);
+}
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button{
+    -webkit-appearance:none;
+    margin:0;
+}
+
+.qty-input[type=number]{
+    -moz-appearance:textfield;
+}
+
+/* منع أسهم الرفع والتنزيل من كل حقول الأرقام */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button{
+    -webkit-appearance:none;
+    margin:0;
+}
+
+input[type="number"]{
+    -moz-appearance:textfield;
+}
+
+/* =========================
+TOTAL
+========================= */
+
+.total-box{
+    background:#f7f8ff;
+
+    border-radius:13px;
+
+    padding:17px;
+
+    margin-top:18px;
+}
+
+.total-row{
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:5px 0;
+
+    font-size:16px;
+}
+
+.total-row.final{
+    border-top:
+    1px solid #ddd;
+
+    margin-top:8px;
+
+    padding-top:12px;
+
+    color:var(--blue);
+
+    font-size:22px;
+
+    font-weight:800;
+}
+
+/* =========================
+TREASURY
+========================= */
+
+.treasury-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:18px;
+}
+
+.treasury-card{
+    background:
+    linear-gradient(
+        135deg,
+        var(--blue),
+        var(--blue-dark)
+    );
+
+    color:white;
+
+    padding:24px;
+
+    border-radius:17px;
+
+    box-shadow:var(--shadow);
+}
+
+.treasury-card h3{
+    font-size:17px;
+
+    margin-bottom:8px;
+}
+
+.treasury-card strong{
+    font-size:28px;
+}
+
+/* =========================
+DATA TABLE
+========================= */
+
+.data-table{
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:750px;
+}
+
+.data-table th,
+.data-table td{
+    padding:11px 9px;
+
+    border-bottom:
+    1px solid var(--border);
+
+    text-align:center;
+}
+
+.data-table th{
+    background:#f6f7fb;
+}
+
+.data-table tr:hover{
+    background:#fafbff;
+}
+
+.badge{
+    padding:4px 9px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    display:inline-block;
+}
+
+.badge-green{
+    background:#dcfce7;
+
+    color:#166534;
+}
+
+.badge-red{
+    background:#fee2e2;
+
+    color:#991b1b;
+}
+
+.badge-orange{
+    background:#fef3c7;
+
+    color:#92400e;
+}
+
+.badge-blue{
+    background:#e0e7ff;
+
+    color:#3730a3;
+}
+
+/* =========================
+MODAL
+========================= */
+
+.modal{
+    position:fixed;
+
+    inset:0;
+
+    background:
+    rgba(0,0,0,.5);
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:3000;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-content{
+    background:white;
+
+    width:min(700px,100%);
+
+    max-height:90vh;
+
+    overflow:auto;
+
+    border-radius:17px;
+
+    padding:25px;
+}
+
+.modal-header{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+}
+
+.close{
+    width:35px;
+    height:35px;
+
+    border:0;
+
+    border-radius:8px;
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+    font-size:20px;
+}
+
+/* =========================
+TOAST
+========================= */
+
+.toast{
+    position:fixed;
+
+    bottom:25px;
+
+    left:25px;
+
+    background:#111827;
+
+    color:white;
+
+    padding:13px 20px;
+
+    border-radius:10px;
+
+    opacity:0;
+
+    transform:translateY(100px);
+
+    transition:.3s;
+
+    z-index:5000;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:translateY(0);
+}
+
+.toast.success{
+    background:var(--green);
+}
+
+.toast.error{
+    background:var(--red);
+}
+
+/* =========================
+MOBILE MENU
+========================= */
+
+.mobile-menu{
+    display:none;
+
+    width:42px;
+    height:42px;
+
+    border:0;
+
+    border-radius:9px;
+
+    background:var(--blue);
+
+    color:white;
+
+    font-size:20px;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:1000px){
+
+    .sidebar{
+        transform:translateX(100%);
+
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-right:0;
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .stats{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+    .form-grid{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+    .sales-layout{
+        grid-template-columns:1fr;
+    }
+
+    .treasury-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+
+    .content{
+        padding:12px;
+    }
+
+    .topbar{
+        padding:0 12px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section{
+        padding:15px;
+    }
+
+}
+
+/* =========================
+REPORTS
+========================= */
+
+.report-toolbar{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    align-items:end;
+    margin-bottom:18px;
+}
+
+.report-summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.report-summary-card{
+    background:#f7f8ff;
+    border:1px solid #dfe2ff;
+    border-radius:13px;
+    padding:15px;
+    text-align:center;
+}
+
+.report-summary-card strong{
+    display:block;
+    color:var(--blue);
+    font-size:22px;
+    margin-top:4px;
+}
+
+.report-invoice{
+    border:1px solid var(--border);
+    border-radius:15px;
+    margin-bottom:18px;
+    overflow:hidden;
+    background:white;
+}
+
+.report-invoice-head{
+    background:#f7f8ff;
+    padding:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.report-invoice-title{
+    font-weight:800;
+    color:var(--blue);
+}
+
+.report-status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:13px;
+}
+
+.report-status input{
+    width:18px;
+    height:18px;
+    accent-color:var(--green);
+}
+
+.report-invoice-meta{
+    padding:10px 14px;
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.report-items{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.report-items th,.report-items td{
+    padding:9px;
+    border-top:1px solid var(--border);
+    text-align:center;
+}
+
+.report-items th{
+    background:#fafafa;
+}
+
+.report-invoice-total{
+    padding:12px 14px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-end;
+    gap:25px;
+    font-size:16px;
+}
+
+.backup-info{
+    background:#f7f8ff;
+    border:1px solid #dfe2ff;
+    border-radius:13px;
+    padding:15px;
+    line-height:2;
+    margin-bottom:15px;
+}
+
+.backup-status{
+    margin-top:12px;
+    padding:10px 13px;
+    border-radius:10px;
+    background:#f3f4f6;
+    color:#444;
+}
+
+@media(max-width:800px){
+    .report-toolbar{grid-template-columns:1fr 1fr;}
+    .report-summary{grid-template-columns:1fr;}
+}
+
+/* =========================
+PRINT
+========================= */
+
+@media print{
+
+    body *{
+        visibility:hidden;
+    }
+
+    #printArea,
+    #printArea *{
+        visibility:visible;
+    }
+
+    #printArea{
+        position:absolute;
+
+        top:0;
+        left:0;
+
+        width:100%;
+
+        display:block!important;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================
+SIDEBAR
+========================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+
+        <h1>البشندي</h1>
+
+        <p>نظام المبيعات</p>
+
+    </div>
+
+    <div class="menu">
+
+        <button
+            class="active"
+            onclick="showPage('dashboard',this)"
+        >
+            🏠 الرئيسية
+        </button>
+
+        <button
+            onclick="showPage('sales',this)"
+        >
+            🛒 فاتورة مبيعات
+        </button>
+
+        <button
+            onclick="showPage('products',this)"
+        >
+            📦 المنتجات
+        </button>
+
+        <button
+            onclick="showPage('treasury',this)"
+        >
+            💰 الخزائن
+        </button>
+
+        <button
+            onclick="showPage('expenses',this)"
+        >
+            💸 المصروفات
+        </button>
+
+        <button
+            onclick="showPage('salesLog',this)"
+        >
+            📋 سجل المبيعات
+        </button>
+
+        <button
+            onclick="showPage('reports',this)"
+        >
+            📊 التقارير
+        </button>
+
+        <button
+            onclick="showPage('stock',this)"
+        >
+            📊 حركة المخزون
+        </button>
+
+        <button
+            onclick="showPage('backup',this)"
+        >
+            💾 النسخ الاحتياطي
+        </button>
+
+    </div>
+
+</aside>
+
+<!-- =========================
+MAIN
+========================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <button
+        class="mobile-menu"
+        onclick="toggleSidebar()"
+    >
+        ☰
+    </button>
+
+    <h2 id="pageTitle">
+        لوحة التحكم
+    </h2>
+
+    <div
+        class="date"
+        id="currentDate"
+    ></div>
+
+</header>
+
+<div class="content">
+
+<!-- =====================================================
+DASHBOARD
+===================================================== -->
+
+<section
+    class="page active"
+    id="dashboard"
+>
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                💰
+            </div>
+
+            <div class="stat-title">
+                مبيعات اليوم
+            </div>
+
+            <div
+                class="stat-value"
+                id="todaySales"
+            >
+                0 ج.م
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🧾
+            </div>
+
+            <div class="stat-title">
+                فواتير اليوم
+            </div>
+
+            <div
+                class="stat-value"
+                id="todayInvoices"
+            >
+                0
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📦
+            </div>
+
+            <div class="stat-title">
+                عدد المنتجات
+            </div>
+
+            <div
+                class="stat-value"
+                id="productsCount"
+            >
+                0
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                💸
+            </div>
+
+            <div class="stat-title">
+                مصروفات اليوم
+            </div>
+
+            <div
+                class="stat-value"
+                id="todayExpenses"
+            >
+                0 ج.م
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <div class="section-title">
+
+            <h2>
+                الخزائن
+            </h2>
+
+        </div>
+
+        <div class="treasury-grid">
+
+            <div class="treasury-card">
+
+                <h3>
+                    خزينة حودة
+                </h3>
+
+                <strong id="dashHoda">
+                    0 ج.م
+                </strong>
+
+            </div>
+
+            <div class="treasury-card">
+
+                <h3>
+                    بنك مصر
+                </h3>
+
+                <strong id="dashBanque">
+                    0 ج.م
+                </strong>
+
+            </div>
+
+            <div class="treasury-card">
+
+                <h3>
+                    أورنج كاش
+                </h3>
+
+                <strong id="dashOrange">
+                    0 ج.م
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <div class="section-title">
+
+            <h2>
+                المنتجات منخفضة المخزون
+            </h2>
+
+        </div>
+
+        <div class="table-wrap">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            الصنف
+                        </th>
+
+                        <th>
+                            الكود
+                        </th>
+
+                        <th>
+                            الباركود
+                        </th>
+
+                        <th>
+                            الكمية
+                        </th>
+
+                        <th>
+                            الحالة
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody
+                    id="lowStockTable"
+                ></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+SALES
+===================================================== -->
+
+<section
+    class="page"
+    id="sales"
+>
+
+<div class="sales-layout">
+
+<div>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+فاتورة مبيعات
+</h2>
+
+<span id="invoiceNumber"></span>
+
+</div>
+
+<!-- البحث -->
+
+<div class="product-search-area">
+
+<div class="search-title">
+🔎 البحث عن الصنف
+</div>
+
+<div class="search-box">
+
+<input
+    id="productSearchInput"
+    type="text"
+    autocomplete="off"
+    placeholder="اكتب اسم الصنف أو الكود..."
+>
+
+<div
+    class="search-results"
+    id="searchResults"
+></div>
+
+</div>
+
+</div>
+
+<!-- الباركود -->
+
+<div class="barcode-box">
+
+<label>
+📷 قراءة الباركود
+</label>
+
+<input
+    id="barcodeInput"
+    class="barcode-input"
+    type="text"
+    autocomplete="off"
+    placeholder="ضع المؤشر هنا ثم امسح الباركود"
+>
+
+</div>
+
+<!-- السلة -->
+
+<div class="table-wrap">
+
+<table class="cart-table">
+
+<thead>
+
+<tr>
+
+<th>
+الصنف
+</th>
+
+<th>
+الكود
+</th>
+
+<th>
+السعر
+</th>
+
+<th>
+الكمية
+</th>
+
+<th>
+الإجمالي
+</th>
+
+<th>
+حذف
+</th>
+
+</tr>
+
+</thead>
+
+<tbody
+    id="cartBody"
+></tbody>
+
+</table>
+
+</div>
+
+<div class="total-box">
+
+<div class="total-row">
+
+<span>
+عدد القطع
+</span>
+
+<strong id="cartItemsCount">
+0
+</strong>
+
+</div>
+
+<div class="total-row">
+
+<span>
+الإجمالي
+</span>
+
+<strong id="cartSubtotal">
+0 ج.م
+</strong>
+
+</div>
+
+<div class="total-row final">
+
+<span>
+المطلوب
+</span>
+
+<strong id="cartTotal">
+0 ج.م
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- الجانب الآخر -->
+
+<div>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+بيانات الدفع
+</h2>
+
+</div>
+
+<div class="form-grid">
+
+<div class="form-group full">
+
+<label>
+الخزينة
+</label>
+
+<select id="saleTreasury">
+
+<option value="حودة">
+خزينة حودة
+</option>
+
+<option value="بنك مصر">
+بنك مصر
+</option>
+
+<option value="أورنج كاش">
+أورنج كاش
+</option>
+
+</select>
+
+</div>
+
+<div class="form-group full">
+
+<label>
+الخصم
+</label>
+
+<input
+    type="number"
+    id="saleDiscount"
+    value="0"
+    min="0"
+    oninput="updateCartTotal()"
+>
+
+</div>
+
+</div>
+
+<br>
+
+<button
+    class="btn btn-green"
+    style="width:100%;font-size:18px"
+    onclick="completeSale()"
+>
+✓ إتمام البيع
+</button>
+
+<br><br>
+
+<button
+    class="btn btn-gray"
+    style="width:100%"
+    onclick="clearCart()"
+>
+تفريغ الفاتورة
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+PRODUCTS
+===================================================== -->
+
+<section
+    class="page"
+    id="products"
+>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+المنتجات
+</h2>
+
+<button
+    class="btn btn-primary"
+    onclick="openProductModal()"
+>
++ إضافة منتج
+</button>
+
+</div>
+
+<input
+    class="search-box"
+    style="padding:12px;border:1px solid #ddd;border-radius:9px;width:100%"
+    id="productsSearch"
+    placeholder="ابحث عن الصنف أو الكود أو الباركود..."
+    oninput="renderProducts()"
+>
+
+<br><br>
+
+<div class="table-wrap">
+
+<table class="data-table">
+
+<thead>
+
+<tr>
+
+<th>
+اسم الصنف
+</th>
+
+<th>
+الكود
+</th>
+
+<th>
+الباركود
+</th>
+
+<th>
+الكمية
+</th>
+
+<th>
+سعر البيع
+</th>
+
+<th>
+الحالة
+</th>
+
+<th>
+إجراء
+</th>
+
+</tr>
+
+</thead>
+
+<tbody
+    id="productsTable"
+></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+TREASURY
+===================================================== -->
+
+<section
+    class="page"
+    id="treasury"
+>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+الخزائن
+</h2>
+
+</div>
+
+<div class="treasury-grid">
+
+<div class="treasury-card">
+
+<h3>
+خزينة حودة
+</h3>
+
+<strong id="treasuryHoda">
+0 ج.م
+</strong>
+
+</div>
+
+<div class="treasury-card">
+
+<h3>
+بنك مصر
+</h3>
+
+<strong id="treasuryBanque">
+0 ج.م
+</strong>
+
+</div>
+
+<div class="treasury-card">
+
+<h3>
+أورنج كاش
+</h3>
+
+<strong id="treasuryOrange">
+0 ج.م
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+حركة الخزائن
+</h2>
+
+</div>
+
+<div class="table-wrap">
+
+<table class="data-table">
+
+<thead>
+
+<tr>
+
+<th>
+التاريخ
+</th>
+
+<th>
+العملية
+</th>
+
+<th>
+الخزينة
+</th>
+
+<th>
+المبلغ
+</th>
+
+<th>
+البيان
+</th>
+
+</tr>
+
+</thead>
+
+<tbody
+    id="treasuryLog"
+></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+EXPENSES
+===================================================== -->
+
+<section
+    class="page"
+    id="expenses"
+>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+تسجيل مصروف
+</h2>
+
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>
+بند المصروف
+</label>
+
+<select id="expenseCategory">
+
+<option>
+كهرباء
+</option>
+
+<option>
+مياه
+</option>
+
+<option>
+إيجار
+</option>
+
+<option>
+رواتب
+</option>
+
+<option>
+نقل
+</option>
+
+<option>
+صيانة
+</option>
+
+<option>
+مشتريات
+</option>
+
+<option>
+إعلانات وتسويق
+</option>
+
+<option>
+أخرى
+</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>
+المبلغ
+</label>
+
+<input
+    type="number"
+    id="expenseAmount"
+    min="0"
+    placeholder="المبلغ"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>
+من خزينة
+</label>
+
+<select id="expenseTreasury">
+
+<option value="حودة">
+خزينة حودة
+</option>
+
+<option value="بنك مصر">
+بنك مصر
+</option>
+
+<option value="أورنج كاش">
+أورنج كاش
+</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>
+البيان
+</label>
+
+<input
+    type="text"
+    id="expenseNote"
+    placeholder="مثال: فاتورة كهرباء"
+>
+
+</div>
+
+</div>
+
+<br>
+
+<button
+    class="btn btn-red"
+    onclick="addExpense()"
+>
+تسجيل المصروف
+</button>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+سجل المصروفات
+</h2>
+
+</div>
+
+<div class="table-wrap">
+
+<table class="data-table">
+
+<thead>
+
+<tr>
+
+<th>
+التاريخ
+</th>
+
+<th>
+البند
+</th>
+
+<th>
+الخزينة
+</th>
+
+<th>
+المبلغ
+</th>
+
+<th>
+البيان
+</th>
+
+</tr>
+
+</thead>
+
+<tbody
+    id="expensesTable"
+></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+SALES LOG
+===================================================== -->
+
+<section
+    class="page"
+    id="salesLog"
+>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+سجل المبيعات
+</h2>
+
+</div>
+
+<div class="table-wrap">
+
+<table class="data-table">
+
+<thead>
+
+<tr>
+
+<th>
+رقم الفاتورة
+</th>
+
+<th>
+التاريخ
+</th>
+
+<th>
+الخزينة
+</th>
+
+<th>
+عدد القطع
+</th>
+
+<th>
+الخصم
+</th>
+
+<th>
+الإجمالي
+</th>
+
+<th>
+التصدير
+</th>
+
+<th>
+الفاتورة
+</th>
+
+<th>
+إجراءات
+</th>
+
+</tr>
+
+</thead>
+
+<tbody
+    id="salesTable"
+></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+REPORTS
+===================================================== -->
+
+<section
+    class="page"
+    id="reports"
+>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+تقارير حركات البيع
+</h2>
+
+<div>
+<button class="btn btn-primary" onclick="printReport()">🖨️ طباعة التقرير</button>
+<button class="btn btn-green" onclick="exportReportCSV()">📥 تصدير التقرير</button>
+</div>
+
+</div>
+
+<div class="report-toolbar">
+
+<div class="form-group">
+<label>من تاريخ</label>
+<input type="date" id="reportFrom" onchange="renderReports()">
+</div>
+
+<div class="form-group">
+<label>إلى تاريخ</label>
+<input type="date" id="reportTo" onchange="renderReports()">
+</div>
+
+<div class="form-group">
+<label>حالة التصدير</label>
+<select id="reportExportStatus" onchange="renderReports()">
+<option value="all">كل الفواتير</option>
+<option value="pending">لم يتم التصدير</option>
+<option value="exported">تم التصدير للنظام الرئيسي</option>
+</select>
+</div>
+
+<div>
+<button class="btn btn-gray" style="width:100%" onclick="setTodayReport()">📅 تقرير اليوم</button>
+</div>
+
+</div>
+
+<div class="report-summary">
+<div class="report-summary-card">عدد الفواتير<strong id="reportInvoicesCount">0</strong></div>
+<div class="report-summary-card">عدد القطع<strong id="reportPiecesCount">0</strong></div>
+<div class="report-summary-card">إجمالي المبيعات<strong id="reportSalesTotal">0 ج.م</strong></div>
+</div>
+
+<div id="reportsContainer"></div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+STOCK
+===================================================== -->
+
+<section
+    class="page"
+    id="stock"
+>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+حركة المخزون
+</h2>
+
+</div>
+
+<div class="table-wrap">
+
+<table class="data-table">
+
+<thead>
+
+<tr>
+
+<th>
+التاريخ
+</th>
+
+<th>
+الصنف
+</th>
+
+<th>
+الكود
+</th>
+
+<th>
+الباركود
+</th>
+
+<th>
+الحركة
+</th>
+
+<th>
+الكمية
+</th>
+
+<th>
+الرصيد
+</th>
+
+</tr>
+
+</thead>
+
+<tbody
+    id="stockTable"
+></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+BACKUP
+===================================================== -->
+
+<section
+    class="page"
+    id="backup"
+>
+
+<div class="section">
+
+<div class="section-title">
+
+<h2>
+النسخ الاحتياطي
+</h2>
+
+</div>
+
+<div class="backup-info">
+<strong>نسخة احتياطية كاملة:</strong><br>
+يتم حفظ المنتجات والفواتير والأصناف والأسعار والخزائن والمصروفات وحركات المخزون وحالات التصدير.
+<br>
+يمكنك اختيار مجلد على سطح المكتب باسم <strong>نسخ السيستم المصغر</strong> ليقوم النظام بحفظ نسخة JSON ونسخة <strong>index.html</strong> كاملة قابلة للتشغيل محليًا.
+</div>
+
+<button
+    class="btn btn-primary"
+    onclick="chooseBackupFolder()"
+>
+📁 تحديد مجلد نسخ السيستم المصغر
+</button>
+
+<button
+    class="btn btn-green"
+    onclick="exportBackup()"
+>
+📤 تصدير نسخة احتياطية الآن
+</button>
+
+<div class="backup-status" id="backupStatus">
+لم يتم تحديد مجلد النسخ التلقائي بعد.
+</div>
+
+<button
+    class="btn btn-green"
+    onclick="document.getElementById('backupFile').click()"
+>
+📥 استرجاع نسخة
+</button>
+
+<input
+    type="file"
+    id="backupFile"
+    accept=".json"
+    style="display:none"
+    onchange="importBackup(event)"
+>
+
+<br><br>
+
+<button
+    class="btn btn-red"
+    onclick="resetSystem()"
+>
+⚠️ حذف جميع البيانات
+</button>
+
+</div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+<!-- =====================================================
+PRODUCT MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="productModal"
+>
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h2 id="modalTitle">
+إضافة منتج
+</h2>
+
+<button
+    class="close"
+    onclick="closeProductModal()"
+>
+×
+</button>
+
+</div>
+
+<input
+    type="hidden"
+    id="editProductId"
+>
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>
+اسم الصنف
+</label>
+
+<input
+    id="productName"
+    placeholder="اسم الصنف"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>
+الكمية الحالية
+</label>
+
+<input
+    type="text"
+    id="productQty"
+    inputmode="numeric"
+    pattern="[0-9]*"
+    autocomplete="off"
+    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>
+الكود
+</label>
+
+<input
+    id="productCode"
+    placeholder="كود الصنف"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>
+الباركود
+</label>
+
+<input
+    id="productBarcode"
+    placeholder="باركود المنتج"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>
+سعر البيع
+</label>
+
+<input
+    type="number"
+    id="productPrice"
+    min="0"
+>
+
+</div>
+
+</div>
+
+<br>
+
+<button
+    class="btn btn-primary"
+    onclick="saveProduct()"
+>
+حفظ المنتج
+</button>
+
+</div>
+
+</div>
+
+<!-- =====================================================
+PRINT
+===================================================== -->
+
+<div
+    id="printArea"
+    style="display:none"
+></div>
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+/* =========================================================
+   المنتجات التي ستضعها أنت
+=========================================================
+
+   كل صنف بالشكل التالي:
+
+   {
+       name:"اسم الصنف",
+       qty:100,
+       code:"12345",
+       barcode:"6221234567890",
+       price:250
+   }
+
+   الاسم       = اسم الصنف
+   qty         = الكمية الحالية
+   code        = كود الصنف
+   barcode     = الباركود
+   price       = سعر البيع
+
+========================================================= */
+
+const INITIAL_PRODUCTS = [
+
+    {
+        name:'باسكت ريكي بالغطاء والكرتونة ليث',
+        qty:1,
+        code:"484",
+        barcode:"6779506964577",
+        price:100
+    },
+
+    {
+        name:'صينية تقديم اكليرك ليث',
+        qty:7,
+        code:"486",
+        barcode:"4302592896976",
+        price:70
+    },
+
+    {
+        name:'ماجور بوبوس 4 ديكور الهلال والنجمة',
+        qty:3,
+        code:"495",
+        barcode:"1445758229249",
+        price:130
+    },
+
+    {
+        name:'طشت دو ديكور 4',
+        qty:1,
+        code:"496",
+        barcode:"4201384809029",
+        price:154
+    },
+
+    {
+        name:'علبة جوهرة 1 بالديكور الاندلس',
+        qty:44,
+        code:"503",
+        barcode:"8663117658698",
+        price:30
+    },
+
+    {
+        name:'علبة جوهرة 3 بالديكور الاندلس',
+        qty:27,
+        code:"504",
+        barcode:"5624483618818",
+        price:67
+    },
+
+    {
+        name:'علبة جوهرة 4 بالديكور الاندلس',
+        qty:9,
+        code:"505",
+        barcode:"2796625862205",
+        price:151
+    },
+
+    {
+        name:'علبة جوهرة 5 بالديكور الاندلس',
+        qty:26,
+        code:"506",
+        barcode:"9051615449945",
+        price:215
+    },
+
+    {
+        name:'منشر مدور كبير الاندلس',
+        qty:12,
+        code:"507",
+        barcode:"7666869972785",
+        price:47
+    },
+
+    {
+        name:'منشر مربع كبير الاندلس',
+        qty:184,
+        code:"508",
+        barcode:"6333954171934",
+        price:47
+    },
+
+    {
+        name:'زبالة رتان صغيرة الهلال والنجمة',
+        qty:3,
+        code:"528",
+        barcode:"3679562550840",
+        price:65
+    },
+
+    {
+        name:'ستاند 3 دور سفن ستارز و الهضبة',
+        qty:3,
+        code:"534",
+        barcode:"2104925571466",
+        price:126
+    },
+
+    {
+        name:'مطبقية ستايل اورجانيزر ابو سيفين',
+        qty:2,
+        code:"544",
+        barcode:"4947236330128",
+        price:395
+    },
+
+    {
+        name:'حافظة طعام ثلاثية البسيوني',
+        qty:14,
+        code:"555",
+        barcode:"7527335870939",
+        price:24
+    },
+
+    {
+        name:'كرسي حمام روكا الاندلس',
+        qty:15,
+        code:"803",
+        barcode:"1981726233363",
+        price:79
+    },
+
+    {
+        name:'باسكت تيبو مربع الاندلس',
+        qty:51,
+        code:"805",
+        barcode:"4824738110338",
+        price:51
+    },
+
+    {
+        name:'بستلة ميجو 50 لتر بالديكور الاندلس',
+        qty:9,
+        code:"807",
+        barcode:"7348404380155",
+        price:253
+    },
+
+    {
+        name:'ماجور بوبوس 2 ديكور الهلال',
+        qty:2,
+        code:"808",
+        barcode:"6098096774107",
+        price:72
+    },
+
+    {
+        name:'ماجور بوبوس 1 ديكور الهلال',
+        qty:3,
+        code:"809",
+        barcode:"5287135274178",
+        price:49
+    },
+
+    {
+        name:'بانيو اطفال الوكيل',
+        qty:9,
+        code:"815",
+        barcode:"8031002091743",
+        price:100
+    },
+
+    {
+        name:'سبت غسيل هاي دقدق',
+        qty:9,
+        code:"1033",
+        barcode:"7314715196570",
+        price:135
+    },
+
+    {
+        name:'طبق تسالي الاندلس بلاستيك',
+        qty:1,
+        code:"1036",
+        barcode:"7978993873310",
+        price:43
+    },
+
+    {
+        name:'ببرونة اطفال كبيرة',
+        qty:21,
+        code:"1594",
+        barcode:"5375418227192",
+        price:35
+    },
+
+    {
+        name:'ببرونة اطفال صغيرة',
+        qty:11,
+        code:"1595",
+        barcode:"1463149597531",
+        price:30
+    },
+
+    {
+        name:'دورق تلاجة فروتي 2 مج',
+        qty:2,
+        code:"2001",
+        barcode:"7916849779683",
+        price:31
+    },
+
+    {
+        name:'استاند بيمبو 4 دور',
+        qty:2,
+        code:"2006",
+        barcode:"6659128832396",
+        price:305
+    },
+
+    {
+        name:'طبلية جديدة',
+        qty:23,
+        code:"2011",
+        barcode:"2399996574533",
+        price:225
+    },
+
+    {
+        name:'كرسي روزيتا صغير',
+        qty:202,
+        code:"2012",
+        barcode:"7673313271127",
+        price:43
+    },
+
+    {
+        name:'كرسي روزيتا كبير',
+        qty:73,
+        code:"2013",
+        barcode:"9899193081696",
+        price:70
+    },
+
+    {
+        name:'بستلة ميجو 50 لتر سادة',
+        qty:12,
+        code:"2016",
+        barcode:"6510092838435",
+        price:227
+    },
+
+    {
+        name:'بستلة ميجو 35 لتر سادة',
+        qty:11,
+        code:"2017",
+        barcode:"8213002893347",
+        price:158
+    },
+
+    {
+        name:'شنطة اولجا',
+        qty:20,
+        code:"2018",
+        barcode:"1703817445857",
+        price:160
+    },
+
+    {
+        name:'طقم برايم 5 قطع',
+        qty:12,
+        code:"2019",
+        barcode:"6083542552842",
+        price:243
+    },
+
+    {
+        name:'سبت مشابك بوكيه',
+        qty:24,
+        code:"2023",
+        barcode:"3034998386010",
+        price:30
+    },
+
+    {
+        name:'باسكت برايم',
+        qty:39,
+        code:"2024",
+        barcode:"7777142343687",
+        price:96
+    },
+
+    {
+        name:'علبة مسحوق دانتيلا',
+        qty:48,
+        code:"2027",
+        barcode:"9479385309212",
+        price:95
+    },
+
+    {
+        name:'باسكت تيبو مدور',
+        qty:59,
+        code:"2028",
+        barcode:"4670862058462",
+        price:48
+    },
+
+    {
+        name:'زبالة تركي مقاس 1 (1.5 لتر )',
+        qty:216,
+        code:"2032",
+        barcode:"5254969707424",
+        price:24
+    },
+
+    {
+        name:'زبالة تركي مقاس 2 (3.0 لتر )',
+        qty:72,
+        code:"2033",
+        barcode:"9714057288588",
+        price:53
+    },
+
+    {
+        name:'زبالة تركي مقاس 3 (6.0 لتر )',
+        qty:60,
+        code:"2034",
+        barcode:"7215842114843",
+        price:94
+    },
+
+    {
+        name:'زبالة تركي مقاس 4 (13.0 لتر )',
+        qty:60,
+        code:"2035",
+        barcode:"8120805943202",
+        price:135
+    },
+
+    {
+        name:'طقم برايم 28 قطعة',
+        qty:5,
+        code:"2038",
+        barcode:"3306465983856",
+        price:1728
+    },
+
+    {
+        name:'مصفاه روجينا باليد',
+        qty:204,
+        code:"2040",
+        barcode:"2298266788390",
+        price:17
+    },
+
+    {
+        name:'مصفاه ميرو',
+        qty:116,
+        code:"2041",
+        barcode:"3078219089359",
+        price:20
+    },
+
+    {
+        name:'منظم مطبخ وحمام',
+        qty:199,
+        code:"2042",
+        barcode:"5037813904947",
+        price:45
+    },
+
+    {
+        name:'منظم ادراج اندلس',
+        qty:5,
+        code:"2043",
+        barcode:"9421805946613",
+        price:55
+    },
+
+    {
+        name:'منظم تلاجة متعدد الاغراض',
+        qty:90,
+        code:"2044",
+        barcode:"3695084420294",
+        price:26
+    },
+
+    {
+        name:'قاطع خضراوات فيجا',
+        qty:79,
+        code:"2045",
+        barcode:"4013826333586",
+        price:75
+    },
+
+    {
+        name:'مصفاه كلاود',
+        qty:265,
+        code:"2046",
+        barcode:"2517441734237",
+        price:56
+    },
+
+    {
+        name:'منظم تلاجة مربع',
+        qty:225,
+        code:"2047",
+        barcode:"1417403637112",
+        price:29
+    },
+
+    {
+        name:'منظم تلاجة مستطيل',
+        qty:360,
+        code:"2048",
+        barcode:"1044271319743",
+        price:25
+    },
+
+    {
+        name:'طبق تسالي ابل الاندلس بلاستيك',
+        qty:48,
+        code:"2049",
+        barcode:"2628033737700",
+        price:50
+    },
+
+    {
+        name:'طبق فاكهة روزا 1',
+        qty:156,
+        code:"2050",
+        barcode:"3943538593507",
+        price:10
+    },
+
+    {
+        name:'طبق فاكهة روزا 2',
+        qty:161,
+        code:"2051",
+        barcode:"5863764148167",
+        price:14
+    },
+
+    {
+        name:'طبق فاكهة روزا 3',
+        qty:159,
+        code:"2052",
+        barcode:"1642325756256",
+        price:19
+    },
+
+    {
+        name:'طبق فاكهة روزا 4',
+        qty:140,
+        code:"2053",
+        barcode:"7204033395406",
+        price:30
+    },
+
+    {
+        name:'طبق ديفا مدور',
+        qty:37,
+        code:"2054",
+        barcode:"3173279712046",
+        price:64
+    },
+
+    {
+        name:'طبق ديفا بيضاوي',
+        qty:13,
+        code:"2055",
+        barcode:"1624073379673",
+        price:60
+    },
+
+    {
+        name:'عصارة موجة',
+        qty:118,
+        code:"2057",
+        barcode:"6221615695861",
+        price:23
+    },
+
+    {
+        name:'سندريلا 1',
+        qty:105,
+        code:"2058",
+        barcode:"4103697330897",
+        price:23
+    },
+
+    {
+        name:'سندريلا 2',
+        qty:141,
+        code:"2059",
+        barcode:"3682915150994",
+        price:37
+    },
+
+    {
+        name:'سندريلا 3',
+        qty:96,
+        code:"2060",
+        barcode:"4422355638251",
+        price:57
+    },
+
+    {
+        name:'سندريلا 4',
+        qty:20,
+        code:"2061",
+        barcode:"3284883962403",
+        price:126
+    },
+
+    {
+        name:'سندريلا 5',
+        qty:3,
+        code:"2062",
+        barcode:"2865053669707",
+        price:186
+    },
+
+    {
+        name:'طقم علبة سندريلا 3*1',
+        qty:60,
+        code:"2063",
+        barcode:"4980249370934",
+        price:124
+    },
+
+    {
+        name:'علبة جوهرة 2 بالديكور الاندلس',
+        qty:50,
+        code:"2064",
+        barcode:"7772569561584",
+        price:47
+    },
+
+    {
+        name:'مطبقية كلاس',
+        qty:51,
+        code:"2066",
+        barcode:"8826686955968",
+        price:110
+    },
+
+    {
+        name:'حافظة خبز',
+        qty:49,
+        code:"2067",
+        barcode:"6557899770148",
+        price:180
+    },
+
+    {
+        name:'حافظة كيك',
+        qty:110,
+        code:"2068",
+        barcode:"9219799536251",
+        price:87
+    },
+
+    {
+        name:'مجفف سبين',
+        qty:108,
+        code:"2069",
+        barcode:"9340516127220",
+        price:134
+    },
+
+    {
+        name:'باسكت فيولا دانتيلا صغير',
+        qty:133,
+        code:"2070",
+        barcode:"5415356516863",
+        price:8
+    },
+
+    {
+        name:'باسكت فيولا دانتيلا وسط',
+        qty:211,
+        code:"2071",
+        barcode:"1018551196003",
+        price:12
+    },
+
+    {
+        name:'باسكت فيولا دانتيلا كبير',
+        qty:59,
+        code:"2072",
+        barcode:"7170951446387",
+        price:40
+    },
+
+    {
+        name:'درج معالق وشوك',
+        qty:14,
+        code:"2075",
+        barcode:"8297225470080",
+        price:28
+    },
+
+    {
+        name:'طقم توابل ايزي مستطيل 4 قطعة',
+        qty:14,
+        code:"2078",
+        barcode:"9065674257915",
+        price:80
+    },
+
+    {
+        name:'ركنة دريم 3 دور',
+        qty:9,
+        code:"2079",
+        barcode:"1745267808073",
+        price:61
+    },
+
+    {
+        name:'طقم توابل ايزي مربع 4 قطع',
+        qty:28,
+        code:"2080",
+        barcode:"3479289005100",
+        price:85
+    },
+
+    {
+        name:'طقم توابل ايزي مستطيل 3 قطع',
+        qty:43,
+        code:"2081",
+        barcode:"6653258090022",
+        price:65
+    },
+
+    {
+        name:'سبت كوفا 1',
+        qty:9,
+        code:"2084",
+        barcode:"1028246374357",
+        price:38
+    },
+
+    {
+        name:'سبت كوفا 2',
+        qty:8,
+        code:"2085",
+        barcode:"3284061477354",
+        price:62
+    },
+
+    {
+        name:'سبت كوفا 3',
+        qty:6,
+        code:"2086",
+        barcode:"3663953929452",
+        price:92
+    },
+
+    {
+        name:'ماجور ميجو 1 سادة',
+        qty:98,
+        code:"2088",
+        barcode:"2225278023416",
+        price:46
+    },
+
+    {
+        name:'ماجور ميجو 2 سادة',
+        qty:105,
+        code:"2089",
+        barcode:"7377422842246",
+        price:73
+    },
+
+    {
+        name:'ماجور ميجو 3 سادة',
+        qty:100,
+        code:"2090",
+        barcode:"3974061016874",
+        price:109
+    },
+
+    {
+        name:'طشت ميجو 1 سادة',
+        qty:100,
+        code:"2091",
+        barcode:"7782171672028",
+        price:45
+    },
+
+    {
+        name:'طشت ميجو 2 سادة',
+        qty:105,
+        code:"2092",
+        barcode:"1564054741047",
+        price:65
+    },
+
+    {
+        name:'طشت ميجو 3 سادة',
+        qty:107,
+        code:"2093",
+        barcode:"3172246627949",
+        price:119
+    },
+
+    {
+        name:'طشت ميجو 4 سادة',
+        qty:103,
+        code:"2094",
+        barcode:"7618034737644",
+        price:133
+    },
+
+    {
+        name:'سبت برايم 1 كيس',
+        qty:42,
+        code:"2095",
+        barcode:"1253423996545",
+        price:176
+    },
+
+    {
+        name:'ياسكت روكت 35 ديكور',
+        qty:14,
+        code:"2318",
+        barcode:"4950766833045",
+        price:215
+    },
+
+    {
+        name:'ياسكت روكت 35 سادة',
+        qty:21,
+        code:"2319",
+        barcode:"5808437007723",
+        price:183
+    },
+
+    {
+        name:'ياسكت روكت 50 سادة',
+        qty:25,
+        code:"2320",
+        barcode:"6376646138587",
+        price:285
+    },
+
+    {
+        name:'ياسكت روكت 50 ديكور',
+        qty:26,
+        code:"2321",
+        barcode:"4059684095365",
+        price:330
+    },
+
+    {
+        name:'كرسي برايم',
+        qty:20,
+        code:"2322",
+        barcode:"7041126939280",
+        price:81
+    },
+
+    {
+        name:'ليفة اللوان 1*3',
+        qty:88,
+        code:"2375",
+        barcode:"5384671854885",
+        price:9
+    },
+
+    {
+        name:'مطبقية ياسمينا بصينيه',
+        qty:2,
+        code:"2377",
+        barcode:"4938501938620",
+        price:120
+    },
+
+    {
+        name:'مطبقية ياسمينا بدون صينيه',
+        qty:2,
+        code:"2378",
+        barcode:"6532477666402",
+        price:110
+    },
+
+    {
+        name:'ماجور ميجو 4 سادة',
+        qty:94,
+        code:"2381",
+        barcode:"9713736347226",
+        price:163
+    },
+
+    {
+        name:'منظم فلاور',
+        qty:91,
+        code:"2870",
+        barcode:"3593493943413",
+        price:79
+    },
+
+    {
+        name:'بولا دائرية دايني 1',
+        qty:216,
+        code:"2873",
+        barcode:"2270409474223",
+        price:12
+    },
+
+    {
+        name:'بولا دائرية دايني 2',
+        qty:112,
+        code:"2874",
+        barcode:"5792834639499",
+        price:19
+    },
+
+    {
+        name:'بولا دائرية دايني 3',
+        qty:124,
+        code:"2875",
+        barcode:"5171251725051",
+        price:28
+    },
+
+    {
+        name:'بولا دائرية دايني 4',
+        qty:153,
+        code:"2876",
+        barcode:"2231964020744",
+        price:38
+    },
+
+    {
+        name:'بولا دائرية دايني 5',
+        qty:91,
+        code:"2877",
+        barcode:"5309361093467",
+        price:53
+    },
+
+    {
+        name:'باسكت سمارت مربع تاتش لارج',
+        qty:30,
+        code:"2878",
+        barcode:"4056016015114",
+        price:278
+    },
+
+    {
+        name:'باسكت سمارت مربع مروحة لارج',
+        qty:30,
+        code:"2880",
+        barcode:"5048683972479",
+        price:260
+    },
+
+    {
+        name:'زبالة ايرا 1',
+        qty:20,
+        code:"2882",
+        barcode:"6216388547691",
+        price:91
+    },
+
+    {
+        name:'زبالة ايرا 3',
+        qty:40,
+        code:"2883",
+        barcode:"2973167582062",
+        price:168
+    },
+
+    {
+        name:'سرفيس ايطالي',
+        qty:137,
+        code:"2884",
+        barcode:"5469344543614",
+        price:24
+    },
+
+    {
+        name:'سلة مطبخ',
+        qty:107,
+        code:"2885",
+        barcode:"7474463028247",
+        price:54
+    },
+
+    {
+        name:'طقم ماربيلا 1*4 مستطيل',
+        qty:52,
+        code:"2889",
+        barcode:"8053672508888",
+        price:98
+    },
+
+    {
+        name:'جردل هواوي',
+        qty:116,
+        code:"2891",
+        barcode:"1343782137557",
+        price:99
+    },
+
+    {
+        name:'شماعة ماجي',
+        qty:98,
+        code:"2895",
+        barcode:"8035443903887",
+        price:36
+    },
+
+    {
+        name:'شماعة كلاس',
+        qty:230,
+        code:"2896",
+        barcode:"9565235050615",
+        price:39
+    },
+
+    {
+        name:'كرسي كومفي كافيه',
+        qty:75,
+        code:"2924",
+        barcode:"3751502314054",
+        price:250
+    },
+
+    {
+        name:'طرابيزة لوتس مربعة',
+        qty:55,
+        code:"2925",
+        barcode:"7086315941675",
+        price:250
+    },
+
+    {
+        name:'كيس مشبك بلاستيك',
+        qty:59,
+        code:"2926",
+        barcode:"5057007945297",
+        price:14
+    },
+
+    {
+        name:'فرشة بلاط التعلب',
+        qty:15,
+        code:"2927",
+        barcode:"8907193599422",
+        price:20
+    },
+
+    {
+        name:'برو بوكس 6 - 42 لتر',
+        qty:12,
+        code:"3122",
+        barcode:"7481182135378",
+        price:279
+    },
+
+    {
+        name:'برو بوكس 7 - 72 لتر',
+        qty:18,
+        code:"3123",
+        barcode:"7387738575790",
+        price:379
+    },
+
+    {
+        name:'باسكت سمارت مربع تاتش ميني',
+        qty:27,
+        code:"3124",
+        barcode:"3151776960337",
+        price:207
+    },
+
+    {
+        name:'مصفاه ناني',
+        qty:120,
+        code:"3125",
+        barcode:"9241772648231",
+        price:17
+    },
+
+    {
+        name:'علب ماربيلا 1*4 مربع',
+        qty:49,
+        code:"3126",
+        barcode:"4422511706541",
+        price:104
+    },
+
+    {
+        name:'طقم علب ماربيلا 3*1 مدور',
+        qty:105,
+        code:"3127",
+        barcode:"4951644361810",
+        price:56
+    },
+
+    {
+        name:'برو بوكس 3',
+        qty:115,
+        code:"3128",
+        barcode:"8885126859198",
+        price:67
+    },
+
+    {
+        name:'برو بوكس 4',
+        qty:65,
+        code:"3129",
+        barcode:"3780065410897",
+        price:114
+    },
+
+    {
+        name:'مراية كلاسيك',
+        qty:12,
+        code:"3130",
+        barcode:"6743904623398",
+        price:242
+    },
+
+    {
+        name:'مرايا جلاكسي',
+        qty:12,
+        code:"3131",
+        barcode:"9470504055461",
+        price:206
+    },
+
+    {
+        name:'طقم علب تلاجة برو بوكس 3*1',
+        qty:16,
+        code:"3132",
+        barcode:"8105337689958",
+        price:137
+    },
+
+    {
+        name:'طبق دايني مدور 3',
+        qty:121,
+        code:"3133",
+        barcode:"7358631971569",
+        price:16
+    },
+
+    {
+        name:'طبق دايني مدور 4',
+        qty:119,
+        code:"3134",
+        barcode:"7991671101512",
+        price:28
+    },
+
+    {
+        name:'طقم برايم 12 قطعة',
+        qty:18,
+        code:"3135",
+        barcode:"8714618673670",
+        price:870
+    },
+
+    {
+        name:'طقم توابل كريستال 4 قطعة',
+        qty:12,
+        code:"3136",
+        barcode:"2384332330133",
+        price:80
+    },
+
+    {
+        name:'زبالة ايرا 2',
+        qty:18,
+        code:"3137",
+        barcode:"1491285914424",
+        price:128
+    },
+
+    {
+        name:'دورق توتي',
+        qty:298,
+        code:"3138",
+        barcode:"2350125796912",
+        price:23
+    },
+
+    {
+        name:'طقم المعيار',
+        qty:105,
+        code:"3139",
+        barcode:"6474155873057",
+        price:18
+    },
+
+    {
+        name:'بستلة ميجو 35 لتر شفاف',
+        qty:36,
+        code:"3140",
+        barcode:"2804238560552",
+        price:178
+    },
+
+    {
+        name:'بستلة ميجو 50 لتر شفاف',
+        qty:36,
+        code:"3141",
+        barcode:"2477196908553",
+        price:246
+    }
+
+];
+
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+const STORAGE_KEY =
+    "BASHANDY_SALES_SYSTEM_V2";
+
+
+let db =
+    JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+    )
+    ||
+    window.__BASHANDY_EMBEDDED_DB__
+    ||
+    null;
+
+
+/*
+   لو أول مرة يتم تشغيل النظام
+*/
+
+if(!db){
+
+    db = {
+
+        products:
+            INITIAL_PRODUCTS.map(product => ({
+
+                id:
+                    crypto.randomUUID(),
+
+                name:
+                    product.name,
+
+                qty:
+                    Number(product.qty),
+
+                code:
+                    product.code,
+
+                barcode:
+                    product.barcode,
+
+                price:
+                    Number(product.price)
+
+            })),
+
+        sales:[],
+
+        expenses:[],
+
+        stockMovements:[],
+
+        treasuryMovements:[],
+
+        treasury:{
+
+            "حودة":0,
+
+            "بنك مصر":0,
+
+            "أورنج كاش":0
+
+        },
+
+        invoiceCounter:1
+
+    };
+
+    saveDB();
+
+}
+
+
+/* =========================================================
+   IMPORT / SYNC PROVIDED PRODUCT LIST
+   - يضيف الأصناف الجديدة من قائمة المخزون المرسلة.
+   - يحذف المنتجات التجريبية فقط.
+   - لا يحذف الفواتير أو الحركات القديمة.
+========================================================= */
+
+const IMPORTED_PRODUCTS_VERSION = "2026-09-20-products-138";
+
+function syncImportedProducts(){
+
+    if(!db || !Array.isArray(db.products)){
+        return;
+    }
+
+    const hasDemoProducts =
+        db.products.some(p =>
+            String(p.name || "").includes("منتج تجريبي")
+        );
+
+    const existingByCode = new Map(
+        db.products.map(p => [String(p.code), p])
+    );
+
+    let changed = false;
+
+    INITIAL_PRODUCTS.forEach(source => {
+
+        const existing = existingByCode.get(String(source.code));
+
+        if(existing){
+
+            // لو المنتج موجود بنفس الكود، نحافظ على كمية النظام الحالية
+            // ونحدّث البيانات الأساسية فقط.
+            if(existing.name !== source.name){
+                existing.name = source.name;
+                changed = true;
+            }
+
+            if(String(existing.barcode) !== String(source.barcode)){
+                existing.barcode = source.barcode;
+                changed = true;
+            }
+
+            if(Number(existing.price) !== Number(source.price)){
+                existing.price = Number(source.price);
+                changed = true;
+            }
+
+        }else{
+
+            db.products.push({
+                id: crypto.randomUUID(),
+                name: source.name,
+                qty: Number(source.qty),
+                code: String(source.code),
+                barcode: String(source.barcode),
+                price: Number(source.price)
+            });
+
+            changed = true;
+        }
+    });
+
+    // إزالة المنتجات التجريبية الموجودة في النسخة القديمة فقط.
+    if(hasDemoProducts){
+
+        const before = db.products.length;
+
+        db.products =
+            db.products.filter(p =>
+                !String(p.name || "").includes("منتج تجريبي")
+            );
+
+        if(db.products.length !== before){
+            changed = true;
+        }
+    }
+
+    if(
+        localStorage.getItem("BASHANDY_IMPORTED_PRODUCTS_VERSION")
+        !== IMPORTED_PRODUCTS_VERSION
+    ){
+
+        localStorage.setItem(
+            "BASHANDY_IMPORTED_PRODUCTS_VERSION",
+            IMPORTED_PRODUCTS_VERSION
+        );
+
+        changed = true;
+    }
+
+    if(changed){
+        saveDB();
+    }
+}
+
+syncImportedProducts();
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+let cart = [];
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+/* =========================================================
+   NORMALIZE DATA + AUTOMATIC BACKUP
+========================================================= */
+
+let backupDirectoryHandle = null;
+let backupTimer = null;
+
+const BACKUP_HANDLE_DB = "BASHANDY_BACKUP_HANDLE";
+
+function openBackupHandleDB(){
+    return new Promise((resolve,reject)=>{
+        const request = indexedDB.open(BACKUP_HANDLE_DB,1);
+        request.onupgradeneeded = () => {
+            request.result.createObjectStore("handles");
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function saveBackupHandle(handle){
+    try{
+        const idb = await openBackupHandleDB();
+        await new Promise((resolve,reject)=>{
+            const tx=idb.transaction("handles","readwrite");
+            tx.objectStore("handles").put(handle,"directory");
+            tx.oncomplete=resolve;
+            tx.onerror=()=>reject(tx.error);
+        });
+        idb.close();
+    }catch(error){}
+}
+
+async function restoreBackupHandle(){
+    try{
+        const idb = await openBackupHandleDB();
+        const handle = await new Promise((resolve,reject)=>{
+            const tx=idb.transaction("handles","readonly");
+            const req=tx.objectStore("handles").get("directory");
+            req.onsuccess=()=>resolve(req.result || null);
+            req.onerror=()=>reject(req.error);
+        });
+        idb.close();
+        if(!handle) return;
+        if(handle.queryPermission && await handle.queryPermission({mode:"readwrite"}) === "granted"){
+            backupDirectoryHandle=handle;
+            const status=document.getElementById("backupStatus");
+            if(status) status.textContent="✓ تم استرجاع مجلد النسخ تلقائيًا من آخر مرة.";
+        }
+    }catch(error){}
+}
+
+if(db && Array.isArray(db.sales)){
+    db.sales.forEach(sale => {
+        if(typeof sale.exportedToMainSystem !== "boolean"){
+            sale.exportedToMainSystem = false;
+        }
+    });
+}
+
+function scheduleAutomaticBackup(){
+    clearTimeout(backupTimer);
+    backupTimer = setTimeout(() => {
+        automaticBackup().catch(() => {});
+    }, 900);
+}
+
+function saveDB(){
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(db)
+    );
+    scheduleAutomaticBackup();
+}
+
+async function chooseBackupFolder(){
+    if(!window.showDirectoryPicker){
+        toast("المتصفح الحالي لا يدعم الحفظ المباشر داخل مجلد. استخدم Chrome على الكمبيوتر.","error");
+        return;
+    }
+    try{
+        backupDirectoryHandle = await window.showDirectoryPicker({mode:"readwrite"});
+        await saveBackupHandle(backupDirectoryHandle);
+        const permission = await backupDirectoryHandle.requestPermission({mode:"readwrite"});
+        if(permission !== "granted") throw new Error();
+        document.getElementById("backupStatus").textContent =
+            "✓ تم تحديد مجلد النسخ. سيتم تحديث نسخة JSON و index.html تلقائيًا بعد أي تغيير في البيانات.";
+        await automaticBackup();
+        toast("تم ربط مجلد النسخ الاحتياطي بنجاح");
+    }catch(error){
+        toast("لم يتم تحديد مجلد النسخ الاحتياطي","error");
+    }
+}
+
+function createBackupObject(){
+    return {
+        version:3,
+        exportedAt:new Date().toISOString(),
+        data:JSON.parse(JSON.stringify(db))
+    };
+}
+
+function createStandaloneHTML(){
+    const html = document.documentElement.outerHTML;
+    const payload = JSON.stringify(createBackupObject().data)
+        .replace(/<\/script/gi,"<\\/script");
+    const marker = `<script>window.__BASHANDY_EMBEDDED_DB__=${payload};<\/script>`;
+    return html.replace("<script>\n\n/* =========================================================\n   المنتجات", marker+"\n\n<script>\n\n/* =========================================================\n   المنتجات");
+}
+
+async function automaticBackup(){
+    if(!backupDirectoryHandle) return;
+    try{
+        const permission = await backupDirectoryHandle.queryPermission({mode:"readwrite"});
+        if(permission !== "granted") return;
+        const backup = createBackupObject();
+        const stamp = new Date().toISOString().replace(/[:.]/g,"-");
+        const jsonHandle = await backupDirectoryHandle.getFileHandle(`backup-${stamp}.json`,{create:true});
+        const jsonWriter = await jsonHandle.createWritable();
+        await jsonWriter.write(JSON.stringify(backup,null,2));
+        await jsonWriter.close();
+        const indexHandle = await backupDirectoryHandle.getFileHandle("index.html",{create:true});
+        const indexWriter = await indexHandle.createWritable();
+        await indexWriter.write(createStandaloneHTML());
+        await indexWriter.close();
+        const status = document.getElementById("backupStatus");
+        if(status) status.textContent = "✓ آخر نسخة تلقائية: " + new Date().toLocaleString("ar-EG");
+    }catch(error){
+        /* لا نوقف السيستم إذا تعذر النسخ التلقائي */
+    }
+}
+
+
+
+/* =========================================================
+   MONEY
+========================================================= */
+
+function money(value){
+
+    return Number(value || 0)
+        .toLocaleString("ar-EG")
+        + " ج.م";
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function getToday(){
+
+    const d = new Date();
+
+    return d.toISOString().slice(0,10);
+
+}
+
+
+function displayDate(){
+
+    return new Date()
+        .toLocaleString("ar-EG");
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+
+        .replaceAll("&","&amp;")
+
+        .replaceAll("<","&lt;")
+
+        .replaceAll(">","&gt;")
+
+        .replaceAll('"',"&quot;")
+
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function toast(message,type="success"){
+
+    const el =
+        document.getElementById("toast");
+
+    el.textContent = message;
+
+    el.className =
+        "toast show " + type;
+
+    setTimeout(()=>{
+
+        el.className="toast";
+
+    },3000);
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(page,button){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(p =>
+            p.classList.remove("active")
+        );
+
+    document
+        .getElementById(page)
+        .classList.add("active");
+
+
+    document
+        .querySelectorAll(".menu button")
+        .forEach(b =>
+            b.classList.remove("active")
+        );
+
+
+    if(button){
+
+        button.classList.add("active");
+
+    }
+
+
+    const titles = {
+
+        dashboard:"لوحة التحكم",
+
+        sales:"فاتورة مبيعات",
+
+        products:"المنتجات",
+
+        treasury:"الخزائن",
+
+        expenses:"المصروفات",
+
+        salesLog:"سجل المبيعات",
+
+        reports:"التقارير",
+
+        stock:"حركة المخزون",
+
+        backup:"النسخ الاحتياطي"
+
+    };
+
+
+    document
+        .getElementById("pageTitle")
+        .textContent =
+        titles[page];
+
+
+    if(window.innerWidth <= 1000){
+
+        document
+            .getElementById("sidebar")
+            .classList.remove("open");
+
+    }
+
+
+    refreshAll();
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+function toggleSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* =========================================================
+   FIND BY BARCODE
+========================================================= */
+
+function findByBarcode(barcode){
+
+    return db.products.find(
+
+        product =>
+            String(product.barcode).trim()
+            ===
+            String(barcode).trim()
+
+    );
+
+}
+
+
+/* =========================================================
+   FIND BY CODE
+========================================================= */
+
+function findByCode(code){
+
+    return db.products.find(
+
+        product =>
+            String(product.code).trim()
+            ===
+            String(code).trim()
+
+    );
+
+}
+
+
+/* =========================================================
+   SEARCH PRODUCTS
+========================================================= */
+
+const searchInput =
+    document.getElementById(
+        "productSearchInput"
+    );
+
+
+searchInput.addEventListener(
+    "input",
+    function(){
+
+        const value =
+            this.value
+            .trim()
+            .toLowerCase();
+
+
+        const results =
+            document.getElementById(
+                "searchResults"
+            );
+
+
+        if(!value){
+
+            results.innerHTML = "";
+
+            results.classList.remove("show");
+
+            return;
+
+        }
+
+
+        const found =
+            db.products
+            .filter(product =>
+
+                String(product.name)
+                    .toLowerCase()
+                    .includes(value)
+
+                ||
+
+                String(product.code)
+                    .toLowerCase()
+                    .includes(value)
+
+                ||
+
+                String(product.barcode)
+                    .toLowerCase()
+                    .includes(value)
+
+            )
+            .slice(0,30);
+
+
+        results.innerHTML = "";
+
+
+        if(found.length === 0){
+
+            results.innerHTML = `
+
+                <div style="
+                    padding:15px;
+                    text-align:center;
+                    color:#777;
+                ">
+                    لا يوجد صنف بهذا البحث
+                </div>
+
+            `;
+
+            results.classList.add("show");
+
+            return;
+
+        }
+
+
+        found.forEach(product => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "search-result";
+
+
+            item.innerHTML = `
+
+                <div>
+
+                    <div class="result-name">
+                        ${escapeHTML(product.name)}
+                    </div>
+
+                    <div class="result-info">
+
+                        الكود:
+                        ${escapeHTML(product.code)}
+
+                        |
+
+                        الباركود:
+                        ${escapeHTML(product.barcode)}
+
+                        |
+
+                        المتاح:
+                        ${product.qty}
+
+                    </div>
+
+                </div>
+
+                <div class="result-price">
+
+                    ${money(product.price)}
+
+                </div>
+
+            `;
+
+
+            item.onclick = () => {
+
+                addProductToCart(product);
+
+                searchInput.value = "";
+
+                results.innerHTML = "";
+
+                results.classList.remove("show");
+
+                document
+                    .getElementById("barcodeInput")
+                    .focus();
+
+            };
+
+
+            results.appendChild(item);
+
+        });
+
+
+        results.classList.add("show");
+
+    }
+);
+
+
+/* =========================================================
+   BARCODE SCANNER
+========================================================= */
+
+const barcodeInput =
+    document.getElementById(
+        "barcodeInput"
+    );
+
+
+barcodeInput.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key !== "Enter"){
+
+            return;
+
+        }
+
+
+        const barcode =
+            this.value.trim();
+
+
+        if(!barcode){
+
+            return;
+
+        }
+
+
+        const product =
+            findByBarcode(barcode);
+
+
+        if(!product){
+
+            toast(
+                "الباركود غير موجود في المنتجات",
+                "error"
+            );
+
+            this.select();
+
+            return;
+
+        }
+
+
+        addProductToCart(product);
+
+
+        this.value = "";
+
+    }
+);
+
+
+/* =========================================================
+   ADD PRODUCT
+========================================================= */
+
+function addProductToCart(product){
+
+    if(!product){
+
+        return;
+
+    }
+
+
+    if(Number(product.qty) <= 0){
+
+        toast(
+            "هذا الصنف غير متوفر في المخزون",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const existing =
+        cart.find(
+            item =>
+                item.productId
+                ===
+                product.id
+        );
+
+
+    if(existing){
+
+        if(
+            existing.qty
+            >=
+            Number(product.qty)
+        ){
+
+            toast(
+                "لا توجد كمية إضافية من هذا الصنف",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        existing.qty++;
+
+    }
+
+    else{
+
+        cart.push({
+
+            productId:
+                product.id,
+
+            name:
+                product.name,
+
+            code:
+                product.code,
+
+            barcode:
+                product.barcode,
+
+            price:
+                Number(product.price),
+
+            qty:1
+
+        });
+
+    }
+
+
+    renderCart();
+
+    const barcodeField = document.getElementById("barcodeInput");
+    if(barcodeField){
+        barcodeField.focus();
+        barcodeField.select();
+    }
+
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function renderCart(){
+
+    const body =
+        document.getElementById(
+            "cartBody"
+        );
+
+
+    body.innerHTML = "";
+
+
+    let count = 0;
+
+
+    cart.forEach(
+        (item,index) => {
+
+            count += item.qty;
+
+
+            const tr =
+                document.createElement("tr");
+
+
+            tr.innerHTML = `
+
+                <td>
+
+                    <strong>
+                        ${escapeHTML(item.name)}
+                    </strong>
+
+                    <br>
+
+                    <small>
+                        باركود:
+                        ${escapeHTML(item.barcode)}
+                    </small>
+
+                </td>
+
+
+                <td>
+                    ${escapeHTML(item.code)}
+                </td>
+
+
+                <td>
+                    ${money(item.price)}
+                </td>
+
+
+                <td>
+
+                    <div class="qty-controls">
+
+                        <input
+                            class="qty-input"
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            autocomplete="off"
+                            value="${item.qty}"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                            onchange="setQty(${index}, this.value)"
+                            onkeydown="if(event.key === 'Enter'){ this.blur(); }"
+                        >
+
+                    </div>
+
+                </td>
+
+
+                <td>
+                    ${money(item.price * item.qty)}
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="btn btn-red"
+                        onclick="removeCart(${index})"
+                    >
+                        حذف
+                    </button>
+
+                </td>
+
+            `;
+
+
+            body.appendChild(tr);
+
+        }
+    );
+
+
+    document
+        .getElementById("cartItemsCount")
+        .textContent = count;
+
+
+    updateCartTotal();
+
+}
+
+
+/* =========================================================
+   CHANGE QTY
+========================================================= */
+
+function setQty(index,value){
+
+    const item = cart[index];
+
+    if(!item){
+        return;
+    }
+
+    const product = db.products.find(
+        p => p.id === item.productId
+    );
+
+    if(!product){
+        return;
+    }
+
+    let newQty = parseInt(value,10);
+
+    if(!Number.isFinite(newQty) || newQty < 1){
+        newQty = 1;
+    }
+
+    if(newQty > Number(product.qty)){
+        toast(
+            "الكمية المطلوبة أكبر من المخزون",
+            "error"
+        );
+        renderCart();
+        return;
+    }
+
+    item.qty = newQty;
+    renderCart();
+}
+
+
+function changeQty(index,change){
+
+    const item = cart[index];
+
+
+    const product =
+        db.products.find(
+            p =>
+                p.id
+                ===
+                item.productId
+        );
+
+
+    if(!product){
+
+        return;
+
+    }
+
+
+    const newQty =
+        item.qty + change;
+
+
+    if(newQty <= 0){
+
+        cart.splice(index,1);
+
+        renderCart();
+
+        return;
+
+    }
+
+
+    if(newQty > Number(product.qty)){
+
+        toast(
+            "الكمية المطلوبة أكبر من المخزون",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    item.qty = newQty;
+
+
+    renderCart();
+
+}
+
+
+/* =========================================================
+   REMOVE
+========================================================= */
+
+function removeCart(index){
+
+    cart.splice(index,1);
+
+    renderCart();
+
+}
+
+
+/* =========================================================
+   TOTAL
+========================================================= */
+
+function updateCartTotal(){
+
+    const subtotal =
+        cart.reduce(
+            (sum,item) =>
+                sum
+                +
+                (
+                    item.price
+                    *
+                    item.qty
+                ),
+            0
+        );
+
+
+    let discount =
+        Number(
+            document
+                .getElementById(
+                    "saleDiscount"
+                )
+                .value
+        )
+        || 0;
+
+
+    if(discount > subtotal){
+
+        discount = subtotal;
+
+        document
+            .getElementById(
+                "saleDiscount"
+            )
+            .value =
+            discount;
+
+    }
+
+
+    const total =
+        subtotal - discount;
+
+
+    document
+        .getElementById(
+            "cartSubtotal"
+        )
+        .textContent =
+        money(subtotal);
+
+
+    document
+        .getElementById(
+            "cartTotal"
+        )
+        .textContent =
+        money(total);
+
+}
+
+
+/* =========================================================
+   CLEAR CART
+========================================================= */
+
+function clearCart(){
+
+    if(cart.length === 0){
+
+        return;
+
+    }
+
+
+    if(
+        !confirm(
+            "هل تريد تفريغ الفاتورة؟"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    cart = [];
+
+
+    document
+        .getElementById(
+            "saleDiscount"
+        )
+        .value = 0;
+
+
+    renderCart();
+
+}
+
+
+/* =========================================================
+   COMPLETE SALE
+========================================================= */
+
+function completeSale(){
+
+    if(cart.length === 0){
+
+        toast(
+            "الفاتورة فارغة",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const treasury =
+        document
+            .getElementById(
+                "saleTreasury"
+            )
+            .value;
+
+
+    const discount =
+        Number(
+            document
+                .getElementById(
+                    "saleDiscount"
+                )
+                .value
+        )
+        || 0;
+
+
+    let subtotal = 0;
+
+
+    for(const item of cart){
+
+        const product =
+            db.products.find(
+                p =>
+                    p.id
+                    ===
+                    item.productId
+            );
+
+
+        if(!product){
+
+            toast(
+                "يوجد صنف غير موجود",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if(
+            item.qty
+            >
+            Number(product.qty)
+        ){
+
+            toast(
+                "الكمية غير كافية للصنف: "
+                +
+                product.name,
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        subtotal +=
+            item.price
+            *
+            item.qty;
+
+    }
+
+
+    const total =
+        subtotal - discount;
+
+
+    const invoiceNo =
+        "B-"
+        +
+        String(
+            db.invoiceCounter
+        )
+        .padStart(5,"0");
+
+
+    db.invoiceCounter++;
+
+
+    /*
+       تسجيل الفاتورة
+    */
+
+    const sale = {
+
+        id:
+            crypto.randomUUID(),
+
+        invoiceNo,
+
+        date:
+            new Date().toISOString(),
+
+        displayDate:
+            displayDate(),
+
+        treasury,
+
+        items:
+            JSON.parse(
+                JSON.stringify(cart)
+            ),
+
+        subtotal,
+
+        discount,
+
+        total,
+
+        exportedToMainSystem:false,
+
+        exportedAt:null
+
+    };
+
+
+    /*
+       خصم الكميات
+    */
+
+    cart.forEach(item => {
+
+        const product =
+            db.products.find(
+                p =>
+                    p.id
+                    ===
+                    item.productId
+            );
+
+
+        product.qty -=
+            item.qty;
+
+
+        db.stockMovements.unshift({
+
+            id:
+                crypto.randomUUID(),
+
+            date:
+                new Date().toISOString(),
+
+            name:
+                product.name,
+
+            code:
+                product.code,
+
+            barcode:
+                product.barcode,
+
+            type:
+                "بيع",
+
+            qty:
+                item.qty,
+
+            balance:
+                product.qty,
+
+            invoiceNo
+
+        });
+
+    });
+
+
+    /*
+       تسجيل الفاتورة
+    */
+
+    db.sales.unshift(sale);
+
+
+    /*
+       إضافة المبلغ للخزينة
+    */
+
+    db.treasury[treasury] +=
+        total;
+
+
+    db.treasuryMovements.unshift({
+
+        id:
+            crypto.randomUUID(),
+
+        date:
+            new Date().toISOString(),
+
+        type:
+            "مبيعات",
+
+        treasury,
+
+        amount:
+            total,
+
+        note:
+            "فاتورة "
+            +
+            invoiceNo
+
+    });
+
+
+    saveDB();
+
+
+    /*
+       طباعة الفاتورة
+    */
+
+    printInvoice(sale);
+
+
+    cart = [];
+
+
+    document
+        .getElementById(
+            "saleDiscount"
+        )
+        .value = 0;
+
+
+    renderCart();
+
+    refreshAll();
+
+
+    toast(
+        "تم تسجيل الفاتورة بنجاح"
+    );
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+function printInvoice(sale){
+
+    const area =
+        document.getElementById(
+            "printArea"
+        );
+
+
+    let rows = "";
+
+
+    sale.items.forEach(item => {
+
+        rows += `
+
+            <tr>
+
+                <td>
+                    ${escapeHTML(item.name)}
+                </td>
+
+                <td>
+                    ${escapeHTML(item.code)}
+                </td>
+
+                <td>
+                    ${item.qty}
+                </td>
+
+                <td>
+                    ${money(item.price)}
+                </td>
+
+                <td>
+                    ${money(
+                        item.price
+                        *
+                        item.qty
+                    )}
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    area.innerHTML = `
+
+        <div style="
+            direction:rtl;
+            font-family:Arial;
+            padding:30px;
+            max-width:850px;
+            margin:auto;
+        ">
+
+            <h1 style="
+                text-align:center;
+                color:#1409c7;
+            ">
+                مول البشندي
+            </h1>
+
+            <h2 style="
+                text-align:center;
+            ">
+                فاتورة مبيعات
+            </h2>
+
+            <hr>
+
+            <p>
+                رقم الفاتورة:
+                <strong>
+                    ${sale.invoiceNo}
+                </strong>
+            </p>
+
+            <p>
+                التاريخ:
+                ${sale.displayDate}
+            </p>
+
+            <p>
+                التحصيل:
+                ${escapeHTML(sale.treasury)}
+            </p>
+
+            <table style="
+                width:100%;
+                border-collapse:collapse;
+                margin-top:20px;
+            ">
+
+                <thead>
+
+                    <tr>
+
+                        <th style="border:1px solid #ddd;padding:8px">
+                            الصنف
+                        </th>
+
+                        <th style="border:1px solid #ddd;padding:8px">
+                            الكود
+                        </th>
+
+                        <th style="border:1px solid #ddd;padding:8px">
+                            الكمية
+                        </th>
+
+                        <th style="border:1px solid #ddd;padding:8px">
+                            السعر
+                        </th>
+
+                        <th style="border:1px solid #ddd;padding:8px">
+                            الإجمالي
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${rows}
+
+                </tbody>
+
+            </table>
+
+            <div style="
+                margin-top:25px;
+                font-size:18px;
+            ">
+
+                <p>
+                    الإجمالي:
+                    ${money(sale.subtotal)}
+                </p>
+
+                <p>
+                    الخصم:
+                    ${money(sale.discount)}
+                </p>
+
+                <h2>
+                    المطلوب:
+                    ${money(sale.total)}
+                </h2>
+
+            </div>
+
+            <hr>
+
+            <p style="
+                text-align:center;
+                margin-top:20px;
+            ">
+                شكرًا لتعاملكم مع مول البشندي
+            </p>
+
+        </div>
+
+    `;
+
+
+    area.style.display = "block";
+
+
+    window.print();
+
+
+    area.style.display = "none";
+
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+function renderProducts(){
+
+    const search =
+        (
+            document
+                .getElementById(
+                    "productsSearch"
+                )
+                .value
+                || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const body =
+        document
+            .getElementById(
+                "productsTable"
+            );
+
+
+    body.innerHTML = "";
+
+
+    db.products
+        .filter(product =>
+
+            String(product.name)
+                .toLowerCase()
+                .includes(search)
+
+            ||
+
+            String(product.code)
+                .toLowerCase()
+                .includes(search)
+
+            ||
+
+            String(product.barcode)
+                .toLowerCase()
+                .includes(search)
+
+        )
+        .forEach(product => {
+
+
+            let status;
+
+
+            if(product.qty <= 0){
+
+                status =
+                    `<span class="badge badge-red">
+                        نفد
+                    </span>`;
+
+            }
+
+            else if(product.qty <= 5){
+
+                status =
+                    `<span class="badge badge-orange">
+                        منخفض
+                    </span>`;
+
+            }
+
+            else{
+
+                status =
+                    `<span class="badge badge-green">
+                        متوفر
+                    </span>`;
+
+            }
+
+
+            const tr =
+                document.createElement("tr");
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${escapeHTML(product.name)}
+                </td>
+
+                <td>
+                    ${escapeHTML(product.code)}
+                </td>
+
+                <td>
+                    ${escapeHTML(product.barcode)}
+                </td>
+
+                <td>
+                    ${product.qty}
+                </td>
+
+                <td>
+                    ${money(product.price)}
+                </td>
+
+                <td>
+                    ${status}
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn btn-gray"
+                        onclick="editProduct('${product.id}')"
+                    >
+                        تعديل
+                    </button>
+
+                    <button
+                        class="btn btn-red"
+                        onclick="deleteProduct('${product.id}')"
+                    >
+                        حذف
+                    </button>
+
+                </td>
+
+            `;
+
+
+            body.appendChild(tr);
+
+        });
+
+}
+
+
+/* =========================================================
+   PRODUCT MODAL
+========================================================= */
+
+function openProductModal(){
+
+    document
+        .getElementById("modalTitle")
+        .textContent =
+        "إضافة منتج";
+
+
+    document
+        .getElementById("editProductId")
+        .value = "";
+
+
+    document
+        .getElementById("productName")
+        .value = "";
+
+
+    document
+        .getElementById("productQty")
+        .value = "";
+
+
+    document
+        .getElementById("productCode")
+        .value = "";
+
+
+    document
+        .getElementById("productBarcode")
+        .value = "";
+
+
+    document
+        .getElementById("productPrice")
+        .value = "";
+
+
+    document
+        .getElementById("productModal")
+        .classList.add("show");
+
+}
+
+
+function closeProductModal(){
+
+    document
+        .getElementById("productModal")
+        .classList.remove("show");
+
+}
+
+
+/* =========================================================
+   SAVE PRODUCT
+========================================================= */
+
+function saveProduct(){
+
+    const id =
+        document
+            .getElementById(
+                "editProductId"
+            )
+            .value;
+
+
+    const name =
+        document
+            .getElementById(
+                "productName"
+            )
+            .value
+            .trim();
+
+
+    const qty =
+        Number(
+            document
+                .getElementById(
+                    "productQty"
+                )
+                .value
+        );
+
+
+    const code =
+        document
+            .getElementById(
+                "productCode"
+            )
+            .value
+            .trim();
+
+
+    const barcode =
+        document
+            .getElementById(
+                "productBarcode"
+            )
+            .value
+            .trim();
+
+
+    const price =
+        Number(
+            document
+                .getElementById(
+                    "productPrice"
+                )
+                .value
+        );
+
+
+    if(
+        !name
+        ||
+        !code
+        ||
+        !barcode
+    ){
+
+        toast(
+            "أدخل اسم الصنف والكود والباركود",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        qty < 0
+        ||
+        price < 0
+    ){
+
+        toast(
+            "الكمية والسعر غير صحيحين",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       التأكد من عدم تكرار الباركود
+    */
+
+    const duplicateBarcode =
+        db.products.find(
+            product =>
+                product.barcode
+                ===
+                barcode
+                &&
+                product.id
+                !==
+                id
+        );
+
+
+    if(duplicateBarcode){
+
+        toast(
+            "هذا الباركود موجود بالفعل",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /*
+       التأكد من عدم تكرار الكود
+    */
+
+    const duplicateCode =
+        db.products.find(
+            product =>
+                product.code
+                ===
+                code
+                &&
+                product.id
+                !==
+                id
+        );
+
+
+    if(duplicateCode){
+
+        toast(
+            "هذا الكود موجود بالفعل",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(id){
+
+        const product =
+            db.products.find(
+                p =>
+                    p.id
+                    ===
+                    id
+            );
+
+
+        if(!product){
+
+            return;
+
+        }
+
+
+        product.name =
+            name;
+
+        product.qty =
+            qty;
+
+        product.code =
+            code;
+
+        product.barcode =
+            barcode;
+
+        product.price =
+            price;
+
+    }
+
+    else{
+
+        db.products.push({
+
+            id:
+                crypto.randomUUID(),
+
+            name,
+
+            qty,
+
+            code,
+
+            barcode,
+
+            price
+
+        });
+
+    }
+
+
+    saveDB();
+
+
+    closeProductModal();
+
+
+    refreshAll();
+
+
+    toast(
+        "تم حفظ المنتج بنجاح"
+    );
+
+}
+
+
+/* =========================================================
+   EDIT PRODUCT
+========================================================= */
+
+function editProduct(id){
+
+    const product =
+        db.products.find(
+            p =>
+                p.id
+                ===
+                id
+        );
+
+
+    if(!product){
+
+        return;
+
+    }
+
+
+    document
+        .getElementById(
+            "modalTitle"
+        )
+        .textContent =
+        "تعديل المنتج";
+
+
+    document
+        .getElementById(
+            "editProductId"
+        )
+        .value =
+        product.id;
+
+
+    document
+        .getElementById(
+            "productName"
+        )
+        .value =
+        product.name;
+
+
+    document
+        .getElementById(
+            "productQty"
+        )
+        .value =
+        product.qty;
+
+
+    document
+        .getElementById(
+            "productCode"
+        )
+        .value =
+        product.code;
+
+
+    document
+        .getElementById(
+            "productBarcode"
+        )
+        .value =
+        product.barcode;
+
+
+    document
+        .getElementById(
+            "productPrice"
+        )
+        .value =
+        product.price;
+
+
+    document
+        .getElementById(
+            "productModal"
+        )
+        .classList.add("show");
+
+}
+
+
+/* =========================================================
+   DELETE SALE / INVOICE
+========================================================= */
+
+function deleteSale(id){
+    const sale = db.sales.find(s => s.id === id);
+    if(!sale){
+        toast("الفاتورة غير موجودة", "error");
+        return;
+    }
+
+    const ok = confirm(
+        `هل تريد حذف الفاتورة ${sale.invoiceNo} نهائيًا؟\n\nسيتم:\n- إعادة الكميات للمخزون\n- عكس مبلغ الفاتورة من الخزينة\n- حذف حركات المخزون والخزينة الخاصة بالفاتورة\n- حذف الفاتورة من التقارير`
+    );
+    if(!ok) return;
+
+    sale.items.forEach(item => {
+        const product = db.products.find(p => p.id === item.productId);
+        if(product){
+            product.qty = Number(product.qty || 0) + Number(item.qty || 0);
+        }
+    });
+
+    const treasuryName = sale.treasury;
+    const saleTotal = Number(sale.total || 0);
+    if(treasuryName && Object.prototype.hasOwnProperty.call(db.treasury, treasuryName)){
+        db.treasury[treasuryName] = Number(db.treasury[treasuryName] || 0) - saleTotal;
+    }
+
+    db.stockMovements = db.stockMovements.filter(move => move.invoiceNo !== sale.invoiceNo);
+    db.treasuryMovements = db.treasuryMovements.filter(move => !(
+        move.type === "مبيعات" &&
+        move.treasury === sale.treasury &&
+        String(move.note || "") === `فاتورة ${sale.invoiceNo}`
+    ));
+    db.sales = db.sales.filter(item => item.id !== id);
+
+    saveDB();
+    refreshAll();
+    toast(`تم حذف الفاتورة ${sale.invoiceNo} وإرجاع الكميات للمخزون`);
+}
+
+/* =========================================================
+   DELETE PRODUCT
+========================================================= */
+
+function deleteProduct(id){
+
+    const product =
+        db.products.find(
+            p =>
+                p.id
+                ===
+                id
+        );
+
+
+    if(!product){
+
+        return;
+
+    }
+
+
+    if(
+        !confirm(
+            "هل تريد حذف الصنف؟"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    db.products =
+        db.products.filter(
+            p =>
+                p.id
+                !==
+                id
+        );
+
+
+    saveDB();
+
+
+    refreshAll();
+
+
+    toast(
+        "تم حذف الصنف"
+    );
+
+}
+
+
+/* =========================================================
+   EXPENSE
+========================================================= */
+
+function addExpense(){
+
+    const category =
+        document
+            .getElementById(
+                "expenseCategory"
+            )
+            .value;
+
+
+    const amount =
+        Number(
+            document
+                .getElementById(
+                    "expenseAmount"
+                )
+                .value
+        );
+
+
+    const treasury =
+        document
+            .getElementById(
+                "expenseTreasury"
+            )
+            .value;
+
+
+    const note =
+        document
+            .getElementById(
+                "expenseNote"
+            )
+            .value
+            .trim();
+
+
+    if(amount <= 0){
+
+        toast(
+            "أدخل مبلغ المصروف",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        db.treasury[treasury]
+        <
+        amount
+    ){
+
+        toast(
+            "رصيد الخزينة غير كافٍ",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    db.treasury[treasury]
+        -=
+        amount;
+
+
+    db.expenses.unshift({
+
+        id:
+            crypto.randomUUID(),
+
+        date:
+            new Date().toISOString(),
+
+        displayDate:
+            displayDate(),
+
+        category,
+
+        amount,
+
+        treasury,
+
+        note
+
+    });
+
+
+    db.treasuryMovements.unshift({
+
+        id:
+            crypto.randomUUID(),
+
+        date:
+            new Date().toISOString(),
+
+        type:
+            "مصروف",
+
+        treasury,
+
+        amount:
+            -amount,
+
+        note:
+            category
+            +
+            (
+                note
+                ?
+                " - " + note
+                :
+                ""
+            )
+
+    });
+
+
+    saveDB();
+
+
+    document
+        .getElementById(
+            "expenseAmount"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "expenseNote"
+        )
+        .value = "";
+
+
+    refreshAll();
+
+
+    toast(
+        "تم تسجيل المصروف"
+    );
+
+}
+
+
+/* =========================================================
+   EXPENSES TABLE
+========================================================= */
+
+function renderExpenses(){
+
+    const body =
+        document
+            .getElementById(
+                "expensesTable"
+            );
+
+
+    body.innerHTML = "";
+
+
+    db.expenses.forEach(
+        expense => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${escapeHTML(
+                        expense.displayDate
+                    )}
+                </td>
+
+                <td>
+                    <span class="badge badge-blue">
+                        ${escapeHTML(
+                            expense.category
+                        )}
+                    </span>
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        expense.treasury
+                    )}
+                </td>
+
+                <td>
+                    ${money(
+                        expense.amount
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        expense.note || "-"
+                    )}
+                </td>
+
+            `;
+
+
+            body.appendChild(tr);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SALES TABLE
+========================================================= */
+
+function renderSales(){
+
+    const body = document.getElementById("salesTable");
+    body.innerHTML = "";
+
+    db.sales.forEach(sale => {
+        const pieces = sale.items.reduce((sum,item)=>sum + item.qty,0);
+        const exported = sale.exportedToMainSystem === true;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><strong>${escapeHTML(sale.invoiceNo)}</strong></td>
+            <td>${escapeHTML(sale.displayDate)}</td>
+            <td>${escapeHTML(sale.treasury)}</td>
+            <td>${pieces}</td>
+            <td>${money(sale.discount)}</td>
+            <td><strong>${money(sale.total)}</strong></td>
+            <td>
+                <span class="badge ${exported ? "badge-green" : "badge-orange"}">
+                    ${exported ? "تم التصدير" : "لم يتم التصدير"}
+                </span>
+            </td>
+            <td>
+                <button class="btn btn-gray" onclick='printInvoice(${JSON.stringify(sale)})'>طباعة</button>
+            </td>
+            <td>
+                <button class="btn btn-red" onclick="deleteSale('${sale.id}')">حذف الفاتورة</button>
+            </td>
+        `;
+        body.appendChild(tr);
+    });
+
+}
+
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+function reportDateValue(date){
+    return new Date(date).toISOString().slice(0,10);
+}
+
+function setTodayReport(){
+    const today = getToday();
+    document.getElementById("reportFrom").value = today;
+    document.getElementById("reportTo").value = today;
+    renderReports();
+}
+
+function getReportSales(){
+    const from = document.getElementById("reportFrom").value;
+    const to = document.getElementById("reportTo").value;
+    const status = document.getElementById("reportExportStatus").value;
+
+    return db.sales.filter(sale => {
+        const d = reportDateValue(sale.date);
+        const inDate = (!from || d >= from) && (!to || d <= to);
+        const inStatus = status === "all"
+            || (status === "exported" && sale.exportedToMainSystem === true)
+            || (status === "pending" && sale.exportedToMainSystem !== true);
+        return inDate && inStatus;
+    });
+}
+
+function toggleExportedStatus(id){
+    const sale = db.sales.find(item => item.id === id);
+    if(!sale) return;
+    sale.exportedToMainSystem = !sale.exportedToMainSystem;
+    sale.exportedAt = sale.exportedToMainSystem ? new Date().toISOString() : null;
+    saveDB();
+    renderReports();
+    renderSales();
+    toast(sale.exportedToMainSystem ? "تم تعليم الفاتورة: تم التصدير للنظام الرئيسي" : "تم إلغاء علامة التصدير");
+}
+
+function renderReports(){
+    const container = document.getElementById("reportsContainer");
+    if(!container) return;
+
+    const sales = getReportSales();
+    const pieces = sales.reduce((sum,sale)=>sum + sale.items.reduce((n,item)=>n+item.qty,0),0);
+    const total = sales.reduce((sum,sale)=>sum + Number(sale.total || 0),0);
+
+    document.getElementById("reportInvoicesCount").textContent = sales.length;
+    document.getElementById("reportPiecesCount").textContent = pieces;
+    document.getElementById("reportSalesTotal").textContent = money(total);
+
+    container.innerHTML = "";
+
+    if(sales.length === 0){
+        container.innerHTML = `<div style="text-align:center;padding:35px;color:#777">لا توجد فواتير حسب الفلاتر الحالية.</div>`;
+        return;
+    }
+
+    sales.forEach(sale => {
+        const exported = sale.exportedToMainSystem === true;
+        const box = document.createElement("div");
+        box.className = "report-invoice";
+        box.innerHTML = `
+            <div class="report-invoice-head">
+                <div>
+                    <div class="report-invoice-title">فاتورة ${escapeHTML(sale.invoiceNo)}</div>
+                    <small>${escapeHTML(sale.displayDate)}</small>
+                </div>
+                <label class="report-status">
+                    <input type="checkbox" ${exported ? "checked" : ""} onchange="toggleExportedStatus('${sale.id}')">
+                    <span>${exported ? "تم التصدير للنظام الرئيسي" : "لم يتم التصدير"}</span>
+                </label>
+                <button class="btn btn-gray" onclick='printInvoice(${JSON.stringify(sale)})'>🖨️ طباعة الفاتورة</button>
+                        <button class="btn btn-red" onclick="deleteSale('${sale.id}')">🗑️ حذف الفاتورة</button>
+            </div>
+            <div class="report-invoice-meta">
+                <span>الخزينة: <strong>${escapeHTML(sale.treasury)}</strong></span>
+                <span>عدد القطع: <strong>${sale.items.reduce((n,item)=>n+item.qty,0)}</strong></span>
+                <span>الخصم: <strong>${money(sale.discount)}</strong></span>
+            </div>
+            <div class="table-wrap">
+                <table class="report-items">
+                    <thead><tr><th>الصنف</th><th>الكود</th><th>الباركود</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
+                    <tbody>
+                        ${sale.items.map(item => `
+                            <tr>
+                                <td>${escapeHTML(item.name)}</td>
+                                <td>${escapeHTML(item.code)}</td>
+                                <td>${escapeHTML(item.barcode)}</td>
+                                <td>${item.qty}</td>
+                                <td>${money(item.price)}</td>
+                                <td>${money(item.price * item.qty)}</td>
+                            </tr>`).join("")}
+                    </tbody>
+                </table>
+            </div>
+            <div class="report-invoice-total">
+                <span>الإجمالي قبل الخصم: <strong>${money(sale.subtotal)}</strong></span>
+                <span>المطلوب: <strong>${money(sale.total)}</strong></span>
+            </div>
+        `;
+        container.appendChild(box);
+    });
+}
+
+function exportReportCSV(){
+    const sales = getReportSales();
+    const rows = [["رقم الفاتورة","التاريخ","الخزينة","الصنف","الكود","الباركود","الكمية","سعر الوحدة","إجمالي الصنف","الخصم","إجمالي الفاتورة","حالة التصدير"]];
+    sales.forEach(sale => {
+        sale.items.forEach(item => {
+            rows.push([sale.invoiceNo,sale.displayDate,sale.treasury,item.name,item.code,item.barcode,item.qty,item.price,item.price*item.qty,sale.discount,sale.total,sale.exportedToMainSystem ? "تم التصدير للنظام الرئيسي" : "لم يتم التصدير"]);
+        });
+    });
+    const csv = "\uFEFF" + rows.map(row => row.map(v => `"${String(v ?? "").replaceAll('"','""')}"`).join(",")).join("\r\n");
+    const blob = new Blob([csv],{type:"text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url;
+    a.download=`تقرير-المبيعات-${getToday()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast("تم تصدير تقرير المبيعات");
+}
+
+function printReport(){
+    const sales = getReportSales();
+    const area = document.getElementById("printArea");
+    let html = `<div style="direction:rtl;font-family:Arial;padding:20px"><h1 style="text-align:center">مول البشندي</h1><h2 style="text-align:center">تقرير حركات البيع</h2>`;
+    html += `<p>عدد الفواتير: ${sales.length} | عدد القطع: ${sales.reduce((n,s)=>n+s.items.reduce((x,i)=>x+i.qty,0),0)} | إجمالي المبيعات: ${money(sales.reduce((n,s)=>n+s.total,0))}</p>`;
+    sales.forEach(sale=>{
+        html += `<hr><h3>${escapeHTML(sale.invoiceNo)} - ${escapeHTML(sale.displayDate)}</h3><p>الخزينة: ${escapeHTML(sale.treasury)} | الحالة: ${sale.exportedToMainSystem ? "تم التصدير للنظام الرئيسي" : "لم يتم التصدير"}</p>`;
+        html += `<table style="width:100%;border-collapse:collapse"><thead><tr><th style="border:1px solid #ddd;padding:6px">الصنف</th><th style="border:1px solid #ddd;padding:6px">الكود</th><th style="border:1px solid #ddd;padding:6px">الباركود</th><th style="border:1px solid #ddd;padding:6px">الكمية</th><th style="border:1px solid #ddd;padding:6px">السعر</th><th style="border:1px solid #ddd;padding:6px">الإجمالي</th></tr></thead><tbody>`;
+        sale.items.forEach(item=>{ html += `<tr><td style="border:1px solid #ddd;padding:6px">${escapeHTML(item.name)}</td><td style="border:1px solid #ddd;padding:6px">${escapeHTML(item.code)}</td><td style="border:1px solid #ddd;padding:6px">${escapeHTML(item.barcode)}</td><td style="border:1px solid #ddd;padding:6px">${item.qty}</td><td style="border:1px solid #ddd;padding:6px">${money(item.price)}</td><td style="border:1px solid #ddd;padding:6px">${money(item.price*item.qty)}</td></tr>`; });
+        html += `</tbody></table><p style="text-align:left"><strong>المطلوب: ${money(sale.total)}</strong></p>`;
+    });
+    html += `</div>`;
+    area.innerHTML=html; area.style.display="block"; window.print(); area.style.display="none";
+}
+
+/* =========================================================
+   STOCK
+========================================================= */
+
+function renderStock(){
+
+    const body =
+        document
+            .getElementById(
+                "stockTable"
+            );
+
+
+    body.innerHTML = "";
+
+
+    db.stockMovements.forEach(
+        move => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${new Date(
+                        move.date
+                    ).toLocaleString("ar-EG")}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        move.name
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        move.code
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        move.barcode
+                    )}
+                </td>
+
+                <td>
+                    <span class="badge badge-red">
+                        ${escapeHTML(
+                            move.type
+                        )}
+                    </span>
+                </td>
+
+                <td>
+                    ${move.qty}
+                </td>
+
+                <td>
+                    ${move.balance}
+                </td>
+
+            `;
+
+
+            body.appendChild(tr);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TREASURY
+========================================================= */
+
+function renderTreasury(){
+
+    document
+        .getElementById(
+            "treasuryHoda"
+        )
+        .textContent =
+        money(
+            db.treasury["حودة"]
+        );
+
+
+    document
+        .getElementById(
+            "treasuryBanque"
+        )
+        .textContent =
+        money(
+            db.treasury["بنك مصر"]
+        );
+
+
+    document
+        .getElementById(
+            "treasuryOrange"
+        )
+        .textContent =
+        money(
+            db.treasury["أورنج كاش"]
+        );
+
+
+    document
+        .getElementById(
+            "dashHoda"
+        )
+        .textContent =
+        money(
+            db.treasury["حودة"]
+        );
+
+
+    document
+        .getElementById(
+            "dashBanque"
+        )
+        .textContent =
+        money(
+            db.treasury["بنك مصر"]
+        );
+
+
+    document
+        .getElementById(
+            "dashOrange"
+        )
+        .textContent =
+        money(
+            db.treasury["أورنج كاش"]
+        );
+
+
+    const body =
+        document
+            .getElementById(
+                "treasuryLog"
+            );
+
+
+    body.innerHTML = "";
+
+
+    db.treasuryMovements.forEach(
+        move => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            const cls =
+                move.amount >= 0
+                ?
+                "badge-green"
+                :
+                "badge-red";
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${new Date(
+                        move.date
+                    ).toLocaleString("ar-EG")}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        move.type
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        move.treasury
+                    )}
+                </td>
+
+                <td>
+
+                    <span class="badge ${cls}">
+
+                        ${
+                            move.amount >= 0
+                            ?
+                            "+"
+                            :
+                            ""
+                        }
+
+                        ${money(
+                            move.amount
+                        )}
+
+                    </span>
+
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        move.note || "-"
+                    )}
+                </td>
+
+            `;
+
+
+            body.appendChild(tr);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function renderDashboard(){
+
+    const today =
+        getToday();
+
+
+    const todaySales =
+        db.sales.filter(
+            sale =>
+                sale.date.startsWith(
+                    today
+                )
+        );
+
+
+    const todayExpenses =
+        db.expenses.filter(
+            expense =>
+                expense.date.startsWith(
+                    today
+                )
+        );
+
+
+    const salesTotal =
+        todaySales.reduce(
+            (sum,sale)=>
+                sum + sale.total,
+            0
+        );
+
+
+    const expensesTotal =
+        todayExpenses.reduce(
+            (sum,expense)=>
+                sum + expense.amount,
+            0
+        );
+
+
+    document
+        .getElementById(
+            "todaySales"
+        )
+        .textContent =
+        money(salesTotal);
+
+
+    document
+        .getElementById(
+            "todayInvoices"
+        )
+        .textContent =
+        todaySales.length;
+
+
+    document
+        .getElementById(
+            "productsCount"
+        )
+        .textContent =
+        db.products.length;
+
+
+    document
+        .getElementById(
+            "todayExpenses"
+        )
+        .textContent =
+        money(expensesTotal);
+
+
+    const body =
+        document
+            .getElementById(
+                "lowStockTable"
+            );
+
+
+    body.innerHTML = "";
+
+
+    db.products
+        .filter(
+            product =>
+                product.qty <= 5
+        )
+        .forEach(
+            product => {
+
+                const status =
+                    product.qty <= 0
+                    ?
+                    `<span class="badge badge-red">
+                        نفد
+                    </span>`
+                    :
+                    `<span class="badge badge-orange">
+                        منخفض
+                    </span>`;
+
+
+                const tr =
+                    document.createElement("tr");
+
+
+                tr.innerHTML = `
+
+                    <td>
+                        ${escapeHTML(
+                            product.name
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            product.code
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            product.barcode
+                        )}
+                    </td>
+
+                    <td>
+                        ${product.qty}
+                    </td>
+
+                    <td>
+                        ${status}
+                    </td>
+
+                `;
+
+
+                body.appendChild(tr);
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+function exportBackup(){
+
+    const backup = createBackupObject();
+
+    const blob = new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url;
+    a.download="bashandy-backup-"+getToday()+".json";
+    a.click();
+    URL.revokeObjectURL(url);
+
+    const htmlBlob = new Blob([createStandaloneHTML()],{type:"text/html;charset=utf-8"});
+    const htmlUrl = URL.createObjectURL(htmlBlob);
+    const htmlA = document.createElement("a");
+    htmlA.href=htmlUrl;
+    htmlA.download="index.html";
+    htmlA.click();
+    URL.revokeObjectURL(htmlUrl);
+
+    toast("تم تصدير النسخة الكاملة: JSON + index.html");
+}
+
+
+/* =========================================================
+   IMPORT
+========================================================= */
+
+function importBackup(event){
+
+    const file =
+        event.target.files[0];
+
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(){
+
+            try{
+
+                const backup =
+                    JSON.parse(
+                        reader.result
+                    );
+
+
+                if(!backup.data){
+
+                    throw new Error();
+
+                }
+
+
+                if(
+                    !confirm(
+                        "سيتم استبدال البيانات الحالية بالنسخة الاحتياطية. هل أنت متأكد؟"
+                    )
+                ){
+
+                    return;
+
+                }
+
+
+                db =
+                    backup.data;
+
+
+                saveDB();
+
+
+                refreshAll();
+
+
+                toast(
+                    "تم استرجاع النسخة بنجاح"
+                );
+
+            }
+
+            catch(error){
+
+                toast(
+                    "ملف النسخة غير صالح",
+                    "error"
+                );
+
+            }
+
+        };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetSystem(){
+
+    const answer =
+        prompt(
+            "لحذف كل البيانات اكتب: حذف"
+        );
+
+
+    if(answer !== "حذف"){
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+
+    location.reload();
+
+}
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+function refreshAll(){
+
+    renderDashboard();
+
+    renderProducts();
+
+    renderTreasury();
+
+    renderExpenses();
+
+    renderSales();
+
+    renderStock();
+
+    if(document.getElementById("reportFrom") && !document.getElementById("reportFrom").value){
+        document.getElementById("reportFrom").value = getToday();
+        document.getElementById("reportTo").value = getToday();
+    }
+    renderReports();
+
+    renderCart();
+
+    updateInvoiceNumber();
+
+}
+
+
+/* =========================================================
+   INVOICE NUMBER
+========================================================= */
+
+function updateInvoiceNumber(){
+
+    document
+        .getElementById(
+            "invoiceNumber"
+        )
+        .textContent =
+        "رقم الفاتورة: B-"
+        +
+        String(
+            db.invoiceCounter
+        )
+        .padStart(5,"0");
+
+}
+
+
+/* =========================================================
+   CURRENT DATE
+========================================================= */
+
+function updateDate(){
+
+    document
+        .getElementById(
+            "currentDate"
+        )
+        .textContent =
+        new Date()
+            .toLocaleDateString(
+                "ar-EG",
+                {
+                    weekday:"long",
+                    year:"numeric",
+                    month:"long",
+                    day:"numeric"
+                }
+            );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+updateDate();
+
+restoreBackupHandle().then(()=>{
+    if(backupDirectoryHandle) automaticBackup().catch(()=>{});
+});
+
+refreshAll();
+
+document
+    .getElementById(
+        "barcodeInput"
+    )
+    .focus();
+
+</script>
+
+</body>
+
+</html>
